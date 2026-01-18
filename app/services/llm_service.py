@@ -1,6 +1,8 @@
 import logging
+from typing import List, Union
 
 import litellm
+from litellm import embedding as litellm_embedding
 from langchain_core.messages import HumanMessage
 from langchain_litellm import ChatLiteLLM
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -138,10 +140,55 @@ async def validate_llm_config(
             )
             return False, "LLM returned an empty response"
 
+    except litellm.AuthenticationError:
+        return False, "Authentication failed: Invalid API Key"
+    except litellm.RateLimitError:
+        return False, "Rate limit exceeded for this model"
     except Exception as e:
         error_msg = f"Failed to validate LLM configuration: {e!s}"
         logger.error(error_msg)
         return False, error_msg
+
+
+async def get_text_embedding(
+    text: Union[str, List[str]],
+    model_name: str,
+    api_key: str,
+    api_base: str | None = None,
+    provider: str = "openai"
+) -> Union[List[float], List[List[float]]]:
+    """
+    Generate embeddings using LiteLLM.
+    Supports list of text or single string.
+
+    Args:
+        text: Text or list of texts to embed
+        model_name: Model identifier
+        api_key: API key
+        api_base: Optional API base URL
+        provider: Provider name
+
+    Returns:
+        List of floats (if input is str) or List of List of floats (if input is list)
+    """
+    try:
+        # Construct model string
+        model_string = f"{provider}/{model_name}" if "/" not in model_name else model_name
+
+        response = litellm_embedding(
+            model=model_string,
+            input=text,
+            api_key=api_key,
+            api_base=api_base
+        )
+
+        # Return list of embeddings
+        data = [r['embedding'] for r in response['data']]
+        return data[0] if isinstance(text, str) else data
+
+    except Exception as e:
+        logger.error(f"Embedding generation failed: {e}")
+        raise e
 
 
 async def get_search_space_llm_instance(
@@ -240,6 +287,11 @@ async def get_search_space_llm_instance(
             litellm_kwargs = {
                 "model": model_string,
                 "api_key": global_config["api_key"],
+                "metadata": {
+                    "search_space_id": str(search_space_id),
+                    "role": role,
+                    "llm_config_id": str(llm_config_id)
+                }
             }
 
             if global_config.get("api_base"):
@@ -314,6 +366,11 @@ async def get_search_space_llm_instance(
         litellm_kwargs = {
             "model": model_string,
             "api_key": llm_config.api_key,
+            "metadata": {
+                "search_space_id": str(search_space_id),
+                "role": role,
+                "llm_config_id": str(llm_config_id)
+            }
         }
 
         # Add optional parameters

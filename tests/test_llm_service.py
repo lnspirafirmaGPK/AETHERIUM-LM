@@ -2,7 +2,10 @@ import asyncio
 import os
 import sys
 import logging
+from typing import List
 from unittest.mock import MagicMock, AsyncMock, patch
+
+import litellm
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -11,7 +14,7 @@ logging.basicConfig(level=logging.INFO)
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from app.db import SearchSpace, LLMConfig, ProviderType
-from app.services.llm_service import get_fast_llm, validate_llm_config
+from app.services.llm_service import get_fast_llm, validate_llm_config, get_text_embedding
 
 async def test_get_fast_llm():
     print("Testing get_fast_llm logic...")
@@ -56,11 +59,9 @@ async def test_validate_llm_config():
     with patch("app.services.llm_service.ChatLiteLLM") as MockChatLiteLLM:
         mock_instance = MockChatLiteLLM.return_value
 
-        # Setup the mock to return a valid response
+        # 1. Test Success
         mock_response = MagicMock()
         mock_response.content = "Test response"
-
-        # Mock ainvoke to return a coroutine that returns mock_response
         async def async_mock(*args, **kwargs):
             return mock_response
         mock_instance.ainvoke = async_mock
@@ -70,14 +71,71 @@ async def test_validate_llm_config():
             model_name="gpt-4",
             api_key="sk-test-key"
         )
-
         assert is_valid is True
         assert error == ""
+
+        # 2. Test AuthenticationError
+        # Mock initialization to raise exception or ainvoke to raise it
+        # validate_llm_config creates a new instance, so we need to mock ainvoke raising it
+        async def async_mock_auth_error(*args, **kwargs):
+             raise litellm.AuthenticationError("Auth failed", llm_provider="openai", model="gpt-4")
+        mock_instance.ainvoke = async_mock_auth_error
+
+        is_valid, error = await validate_llm_config(
+            provider="OPENAI",
+            model_name="gpt-4",
+            api_key="sk-test-key"
+        )
+        assert is_valid is False
+        assert "Authentication failed" in error
+
         print("validate_llm_config test passed!")
+
+async def test_get_text_embedding():
+    print("Testing get_text_embedding logic...")
+
+    with patch("app.services.llm_service.litellm_embedding") as mock_embedding:
+        # Mock response for string input
+        mock_embedding.return_value = {
+            "data": [
+                {"embedding": [0.1, 0.2, 0.3]}
+            ]
+        }
+
+        embedding = await get_text_embedding(
+            text="hello",
+            model_name="text-embedding-3-small",
+            api_key="sk-test"
+        )
+
+        assert isinstance(embedding, list)
+        assert len(embedding) == 3
+        assert embedding[0] == 0.1
+
+        # Mock response for list input
+        mock_embedding.return_value = {
+            "data": [
+                {"embedding": [0.1, 0.2, 0.3]},
+                {"embedding": [0.4, 0.5, 0.6]}
+            ]
+        }
+
+        embeddings = await get_text_embedding(
+            text=["hello", "world"],
+            model_name="text-embedding-3-small",
+            api_key="sk-test"
+        )
+
+        assert isinstance(embeddings, list)
+        assert len(embeddings) == 2
+        assert embeddings[0] == [0.1, 0.2, 0.3]
+
+        print("get_text_embedding test passed!")
 
 if __name__ == "__main__":
     async def main():
         await test_get_fast_llm()
         await test_validate_llm_config()
+        await test_get_text_embedding()
 
     asyncio.run(main())
