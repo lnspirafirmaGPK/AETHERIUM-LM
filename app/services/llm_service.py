@@ -4,7 +4,7 @@ from typing import List, Union
 import litellm
 from litellm import embedding as litellm_embedding
 from langchain_core.messages import HumanMessage
-from langchain_litellm import ChatLiteLLM
+from langchain_community.chat_models import ChatLiteLLM
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
