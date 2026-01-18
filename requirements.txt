@@ -1,0 +1,7 @@
+flet>=0.21.0
+litellm
+langchain-community
+openai
+python-dotenv
+sqlalchemy
+aiosqlite
