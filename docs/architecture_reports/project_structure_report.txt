@@ -1,0 +1,74 @@
+PROJECT STRUCTURE REPORT
+========================
+
+This report provides a detailed breakdown of the file structure within the Aetherium LM codebase.
+It describes the purpose and functionality of each key file, serving as a reference for the current system state.
+
+ROOT DIRECTORY
+--------------
+
+File: main.py
+Description:
+    This is the main entry point of the application. It uses the Flet framework to render the User Interface (UI).
+    It is responsible for:
+    - Setting up the mobile configuration console.
+    - Capturing user inputs (Provider, Model Name, API Key).
+    - Handling the "Validate & Save Config" event.
+    - Invoking the `validate_llm_config` function from the backend service to test connectivity.
+
+File: requirements.txt
+Description:
+    Specifies the Python package dependencies required for the project.
+    Key libraries include:
+    - `flet`: For building the UI.
+    - `litellm`: For a unified interface to various LLM providers (OpenAI, Anthropic, etc.).
+    - `sqlalchemy` & `aiosqlite`: For asynchronous database interactions.
+
+File: pyproject.toml
+Description:
+    Defines the build system requirements and project metadata. It ensures the project runs on Python 3.10+
+    and lists core dependencies similar to requirements.txt but in a standard TOML format.
+
+File: README.md
+Description:
+    The primary documentation file usually containing project overview, setup instructions, and usage details.
+
+APP DIRECTORY (app/)
+--------------------
+
+File: app/__init__.py
+Description:
+    Marks the directory as a Python package.
+
+File: app/config.py
+Description:
+    Centralizes the application configuration using Pydantic Settings.
+    It manages:
+    - `DATABASE_URL`: Connection string for the SQLite database.
+    - `GLOBAL_LLM_CONFIGS`: Default system-wide LLM configurations.
+    - Environment variable loading for sensitive keys (e.g., OPENAI_API_KEY).
+
+File: app/db.py
+Description:
+    Implements the Data Access Layer (DAL).
+    - Configures the asynchronous SQLAlchemy engine and session factory (`AsyncSessionLocal`).
+    - Defines Database Models:
+        - `SearchSpace`: Represents a logical grouping or workspace.
+        - `LLMConfig`: Stores provider details, API keys, and model names.
+    - Defines `ProviderType`: An enumeration of all supported AI providers (OpenAI, Google, Groq, etc.).
+
+APP/SERVICES DIRECTORY (app/services/)
+--------------------------------------
+
+File: app/services/__init__.py
+Description:
+    Marks the directory as a Python package.
+
+File: app/services/llm_service.py
+Description:
+    Contains the core business logic for the application.
+    Key functions include:
+    - `validate_llm_config`: A critical function called by the UI to verify if a given LLM configuration works by making a test API call.
+    - `get_search_space_llm_instance`: A factory function that retrieves settings from the database and initializes a `ChatLiteLLM` client.
+    - `get_text_embedding`: Wraps `litellm.embedding` to generate vector representations of text.
+    - `LLMRole`: Defines constants for different agent roles (FAST, STRATEGIC, LONG_CONTEXT).
