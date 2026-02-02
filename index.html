@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NotebookLM // NEXT</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Inter:wght@300;400;600&display=swap');
+
+        :root {
+            --accent-primary: #00f3ff;
+            --accent-secondary: #bc13fe;
+            --glass-bg: rgba(20, 20, 30, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-highlight: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            background-color: #050508;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(188, 19, 254, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 243, 255, 0.1) 0%, transparent 40%);
+            color: #e0e0e0;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* --- Glassmorphism Utilities --- */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        .glass-input {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: white;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-input:focus {
+            background: rgba(0, 0, 0, 0.5);
+            border-color: var(--accent-primary);
+            outline: none;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);
+        }
+
+        /* --- Sidebar Navigation --- */
+        .nav-item {
+            position: relative;
+            transition: all 0.3s ease;
+            color: rgba(255,255,255,0.4);
+            cursor: pointer;
+        }
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 0%;
+            background: var(--accent-primary);
+            transition: height 0.3s ease;
+            border-radius: 0 2px 2px 0;
+            box-shadow: 0 0 10px var(--accent-primary);
+        }
+        .nav-item:hover { color: white; background: var(--glass-highlight); }
+        .nav-item.active { color: white; background: linear-gradient(90deg, rgba(0,243,255,0.1), transparent); }
+        .nav-item.active::before { height: 70%; }
+        .nav-item.active i { color: var(--accent-primary); filter: drop-shadow(0 0 5px rgba(0,243,255,0.5)); }
+
+        /* --- Animations --- */
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(188, 19, 254, 0.3); }
+            50% { box-shadow: 0 0 25px rgba(188, 19, 254, 0.6); }
+        }
+        .synergy-orb {
+            animation: pulse-glow 3s infinite;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
+
+        .font-tech { font-family: 'Rajdhani', sans-serif; }
+    </style>
+</head>
+<body>
+    <div id="root" class="h-full w-full"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+        let apiKey = "";
+
+        const FEATURES = {
+            AUDIO: 'Audio Overview',
+            DATA_TABLES: 'Data Tables', // New Feature
+            VIDEO: 'Video Overview',
+            REPORT: 'Report',
+            FLASHCARDS: 'Flashcards',
+            QUIZ: 'Quizzes',
+            INFOGRAPHIC: 'Infographic',
+            SLIDES: 'Slide Deck'
+        };
+
+        const Generator = () => {
+            // --- STATE ---
+            const [sourceAmount, setSourceAmount] = useState(5);
+            const [activeTab, setActiveTab] = useState(FEATURES.AUDIO);
+
+            // Centralized Goal State
+            const [featureGoals, setFeatureGoals] = useState({
+                [FEATURES.AUDIO]: "",
+                [FEATURES.DATA_TABLES]: "",
+                [FEATURES.VIDEO]: "",
+                [FEATURES.REPORT]: "",
+                [FEATURES.FLASHCARDS]: "",
+                [FEATURES.QUIZ]: "",
+                [FEATURES.INFOGRAPHIC]: "",
+                [FEATURES.SLIDES]: ""
+            });
+
+            const [generatedPrompt, setGeneratedPrompt] = useState("");
+            const [sourceContent, setSourceContent] = useState("");
+            const [sourceDescription, setSourceDescription] = useState("");
+            const [isSourceExpanded, setIsSourceExpanded] = useState(false);
+
+            // AI States
+            const [isRefining, setIsRefining] = useState(false);
+            const [isBrainstorming, setIsBrainstorming] = useState(false);
+            const [isAutoSynergy, setIsAutoSynergy] = useState(false);
+            const [isGenerating, setIsGenerating] = useState(false);
+            const [aiError, setAiError] = useState("");
+            const [suggestions, setSuggestions] = useState([]);
+
+            // Config States
+            const [audioConfig, setAudioConfig] = useState({ format: 'Deep Dive', length: 'Long', host1: '', host2: '' });
+            const [tableConfig, setTableConfig] = useState({ focus: 'Comparison', density: 'Comprehensive' }); // New Config
+            const [videoConfig, setVideoConfig] = useState({ format: 'Explainer', style: 'Classic', customStyle: '' });
+            const [cardConfig, setCardConfig] = useState({ number: 'More', difficulty: 'Hard' });
+            const [quizConfig, setQuizConfig] = useState({ number: 'More', difficulty: 'Hard' });
+            const [infoConfig, setInfoConfig] = useState({ orientation: 'Portrait', detail: 'Detailed' });
+            const [slideConfig, setSlideConfig] = useState({ format: 'Detailed Deck', length: 'Long' });
+
+            const fileInputRef = useRef(null);
+
+            // --- EFFECT: Clear Output on Tab Change ---
+            useEffect(() => {
+                setGeneratedPrompt("");
+                setAiError("");
+                setSuggestions([]);
+            }, [activeTab]);
+
+            // --- HELPERS ---
+            const getSourceStrategy = (count) => {
+                const n = parseInt(count);
+                if (n <= 2) return "STRATEGY: Micro-Analysis. Treat every sentence as a critical data point.";
+                if (n <= 10) return "STRATEGY: Deep Synthesis. Connect every document. Leave no citation unused.";
+                return "STRATEGY: Macro-Exhaustion. Identify every distinct pattern, outlier, and theme. Ensure 100% coverage.";
+            };
+
+            const callGemini = async (promptText) => {
+                setAiError("");
+                if (!apiKey) {
+                    setAiError("API Key is missing.");
+                    return null;
+                }
+                try {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
+                    });
+                    if (!response.ok) throw new Error('AI Service Unavailable');
+                    const data = await response.json();
+                    return data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+                } catch (error) {
+                    setAiError("Connection error.");
+                    return null;
+                }
+            };
+
+            const handleFileUpload = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    setSourceContent(event.target.result.slice(0, 50000));
+                    setSourceAmount(1);
+                };
+                reader.readAsText(file);
+            };
+
+            const normalizeFeature = (input) => {
+                if (!input) return FEATURES.AUDIO;
+                const lower = input.toLowerCase();
+                if (lower.includes('audio')) return FEATURES.AUDIO;
+                if (lower.includes('table')) return FEATURES.DATA_TABLES;
+                if (lower.includes('video')) return FEATURES.VIDEO;
+                if (lower.includes('flash')) return FEATURES.FLASHCARDS;
+                if (lower.includes('quiz')) return FEATURES.QUIZ;
+                if (lower.includes('info')) return FEATURES.INFOGRAPHIC;
+                if (lower.includes('slide')) return FEATURES.SLIDES;
+                if (lower.includes('report')) return FEATURES.REPORT;
+                return FEATURES.AUDIO;
+            };
+
+            // --- AI ACTIONS ---
+            const handleAutoSynergy = async () => {
+                if (!sourceContent.trim() && !sourceDescription.trim()) {
+                    setAiError("Please provide EITHER source text OR a description.");
+                    setIsSourceExpanded(true);
+                    return;
+                }
+                setIsAutoSynergy(true); setAiError("");
+
+                const prompt = `I have a source text for Google NotebookLM. Analyze and act as an expert "Pedagogical Architect".
+
+                USER'S STRUCTURAL BLUEPRINT (Description): "${sourceDescription}"
+                RAW SOURCE TEXT PROVIDED: ${sourceContent ? "YES" : "NO"}
+
+                HYPER-ADVANCED LOGIC & CHAIN OF THOUGHT:
+                1. Contextual Integration: First, look at the "Structural Blueprint". If the user says "7 units", this is your GROUND TRUTH.
+                2. Structural Scan: Scan source for structure.
+                3. DATA TABLE ANALYSIS: specifically identify unstructured data that would benefit from rows/columns (e.g. timelines, comparisons, specs).
+                4. MAXIMIZATION: Always configure for MAXIMUM length/depth.
+                5. HOST PERSONAS (Audio): Suggest specific personas.
+                6. ISOLATION: Treat each feature independently.
+
+                Generate TAILORED configs and "User Goal" prompts for EVERY feature.
+                Return ONLY JSON: {
+                    "bestFeature": "...",
+                    "audio": { "config": { "format": "Deep Dive", "length": "Long", "host1": "...", "host2": "..." }, "goal": "..." },
+                    "data_tables": { "config": { "focus": "...", "density": "..." }, "goal": "..." },
+                    "video": { "config": {...}, "goal": "..." },
+                    "report": { "goal": "..." },
+                    "flashcards": { "config": {...}, "goal": "..." },
+                    "quiz": { "config": {...}, "goal": "..." },
+                    "infographic": { "config": {...}, "goal": "..." },
+                    "slides": { "config": {...}, "goal": "..." }
+                }
+                SOURCE PREVIEW: "${sourceContent ? sourceContent.slice(0, 30000) : "NO RAW TEXT - USE DESCRIPTION"}"...`;
+
+                const result = await callGemini(prompt);
+                if (result) {
+                    try {
+                        const cleanJson = result.replace(/```json/g, '').replace(/```/g, '').trim();
+                        const data = JSON.parse(cleanJson);
+
+                        setAudioConfig(prev => {
+                            const aiConfig = data.audio?.config || {};
+                            let newFormat = aiConfig.format || prev.format;
+                            const validFormats = ['Deep Dive', 'Brief', 'Critique', 'Debate'];
+                            const match = validFormats.find(f => f.toLowerCase() === newFormat.toLowerCase());
+                            if (match) newFormat = match;
+                            else newFormat = 'Deep Dive';
+
+                            if ((aiConfig.host1 || aiConfig.host2) && newFormat !== 'Debate') {
+                                newFormat = 'Deep Dive';
+                            }
+
+                            return {
+                                ...prev,
+                                ...aiConfig,
+                                format: newFormat,
+                                host1: aiConfig.host1 || prev.host1,
+                                host2: aiConfig.host2 || prev.host2
+                            };
+                        });
+
+                        if (data.data_tables?.config) setTableConfig(prev => ({...prev, ...data.data_tables.config}));
+                        if (data.video?.config) setVideoConfig(prev => ({...prev, ...data.video.config}));
+                        if (data.flashcards?.config) setCardConfig(prev => ({...prev, ...data.flashcards.config}));
+                        if (data.quiz?.config) setQuizConfig(prev => ({...prev, ...data.quiz.config}));
+                        if (data.infographic?.config) setInfoConfig(prev => ({...prev, ...data.infographic.config}));
+                        if (data.slides?.config) setSlideConfig(prev => ({...prev, ...data.slides.config}));
+
+                        setFeatureGoals({
+                            [FEATURES.AUDIO]: data.audio?.goal || "",
+                            [FEATURES.DATA_TABLES]: data.data_tables?.goal || "",
+                            [FEATURES.VIDEO]: data.video?.goal || "",
+                            [FEATURES.REPORT]: data.report?.goal || "",
+                            [FEATURES.FLASHCARDS]: data.flashcards?.goal || "",
+                            [FEATURES.QUIZ]: data.quiz?.goal || "",
+                            [FEATURES.INFOGRAPHIC]: data.infographic?.goal || "",
+                            [FEATURES.SLIDES]: data.slides?.goal || ""
+                        });
+
+                        if (data.bestFeature) setActiveTab(normalizeFeature(data.bestFeature));
+                        setIsSourceExpanded(false);
+                    } catch (e) { setAiError("Failed to parse Synergy response."); console.error(e); }
+                }
+                setIsAutoSynergy(false);
+            };
+
+            const handleRefineGoal = async () => {
+                const currentGoal = featureGoals[activeTab] || "";
+                if (!currentGoal.trim()) { setAiError("Type a goal first!"); return; }
+                setIsRefining(true);
+                const context = sourceContent ? `Context: "${sourceContent.slice(0, 1000)}..."` : `Context Description: "${sourceDescription}"`;
+                const prompt = `Refine this NotebookLM prompt for "${activeTab}". ${context} \n\nUser Goal: "${currentGoal}"\n\nTask: Rewrite into a "Chain of Thought" instruction. Comprehensive. Max 3 sentences.`;
+                const result = await callGemini(prompt);
+                if (result) setFeatureGoals(prev => ({...prev, [activeTab]: result.trim()}));
+                setIsRefining(false);
+            };
+
+            const handleBrainstorm = async () => {
+                setIsBrainstorming(true);
+                const context = sourceContent ? `based on: "${sourceContent.slice(0, 1000)}..."` : `based on description: "${sourceDescription}"`;
+                const prompt = `Suggest 3 "Maximalist" creative angles for NotebookLM "${activeTab}" ${context}. Focus on deep dives. Return ONLY a JSON array of 3 strings.`;
+                const result = await callGemini(prompt);
+                if (result) {
+                    try {
+                        const cleanJson = result.replace(/```json/g, '').replace(/```/g, '').trim();
+                        const parsed = JSON.parse(cleanJson);
+                        if (Array.isArray(parsed) && parsed.length > 0) setSuggestions(parsed);
+                    } catch (e) { setAiError("Brainstorm error."); }
+                }
+                setIsBrainstorming(false);
+            };
+
+            const generatePrompt = async () => {
+                const currentGoal = featureGoals[activeTab] || "";
+                if (!currentGoal.trim()) { setGeneratedPrompt("Describe your goal first."); return; }
+                setIsGenerating(true); setGeneratedPrompt("");
+
+                const sourceStrategy = getSourceStrategy(sourceAmount);
+                let configDetails = "";
+                if (activeTab === FEATURES.AUDIO) configDetails = JSON.stringify(audioConfig);
+                else if (activeTab === FEATURES.DATA_TABLES) configDetails = JSON.stringify(tableConfig);
+                else if (activeTab === FEATURES.VIDEO) configDetails = JSON.stringify(videoConfig);
+                else if (activeTab === FEATURES.REPORT) configDetails = "Professional Report";
+                else if (activeTab === FEATURES.FLASHCARDS) configDetails = JSON.stringify(cardConfig);
+                else if (activeTab === FEATURES.QUIZ) configDetails = JSON.stringify(quizConfig);
+                else if (activeTab === FEATURES.INFOGRAPHIC) configDetails = JSON.stringify(infoConfig);
+                else if (activeTab === FEATURES.SLIDES) configDetails = JSON.stringify(slideConfig);
+
+                const prompt = `Act as an expert NotebookLM Prompt Engineer. Write a "Steering Prompt" designed for MAXIMUM LENGTH and DEPTH.
+
+                    INPUT:
+                    - Feature: ${activeTab}
+                    - Config: ${configDetails}
+                    - Strategy: ${sourceStrategy}
+                    - User Structural Description: "${sourceDescription}"
+                    - User Goal: "${currentGoal}"
+                    ${sourceContent ? `- Raw Context Content: "${sourceContent.slice(0, 20000)}..."` : "- Raw Context Content: NOT PROVIDED (Rely on Structural Description)"}
+
+                    ADVANCED INSTRUCTIONS:
+                    1. Use authoritative language.
+                    2. CRITICAL: If "User Structural Description" exists, explicitly command coverage of the specific structure.
+                    3. For DATA TABLES: Specify suggested columns (e.g. "Create columns for Date, Event, Significance...") based on the goal.
+                    4. Audio: Roleplay personas if provided.
+                    5. STRICT ISOLATION: No cross-references.
+                    6. Output ONLY the prompt text.`;
+
+                const result = await callGemini(prompt);
+                if (result) setGeneratedPrompt(result.trim());
+                setIsGenerating(false);
+            };
+
+            const copyToClipboard = () => {
+                const textarea = document.createElement("textarea");
+                textarea.value = generatedPrompt;
+                textarea.style.position = 'fixed';
+                textarea.style.left = '-9999px';
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    alert("Copied!");
+                } catch (e) {
+                    console.error("Copy failed", e);
+                    alert("Copy failed. Please select text manually.");
+                }
+                document.body.removeChild(textarea);
+            };
+
+            const getIcon = (feature) => {
+                switch(feature) {
+                    case FEATURES.AUDIO: return "fa-headphones";
+                    case FEATURES.DATA_TABLES: return "fa-table";
+                    case FEATURES.VIDEO: return "fa-video";
+                    case FEATURES.REPORT: return "fa-file-lines";
+                    case FEATURES.FLASHCARDS: return "fa-layer-group";
+                    case FEATURES.QUIZ: return "fa-circle-question";
+                    case FEATURES.INFOGRAPHIC: return "fa-chart-pie";
+                    case FEATURES.SLIDES: return "fa-chalkboard-user";
+                    default: return "fa-star";
+                }
+            };
+
+             const renderConfig = () => {
+                switch(activeTab) {
+                    case FEATURES.AUDIO:
+                        return (
+                            <div className="space-y-3">
+                                <div>
+                                    <label className="block text-xs text-gray-400 mb-1">Format</label>
+                                    <select className="glass-input w-full p-2 rounded" value={audioConfig.format} onChange={e => setAudioConfig({...audioConfig, format: e.target.value})}>
+                                        {['Deep Dive', 'Brief', 'Critique', 'Debate'].map(o => <option key={o} value={o} className="text-black">{o}</option>)}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-xs text-gray-400 mb-1">Length</label>
+                                    <select className="glass-input w-full p-2 rounded" value={audioConfig.length} onChange={e => setAudioConfig({...audioConfig, length: e.target.value})}>
+                                        {['Short', 'Medium', 'Long'].map(o => <option key={o} value={o} className="text-black">{o}</option>)}
+                                    </select>
+                                </div>
+                                <div className="flex space-x-2">
+                                    <div className="w-1/2">
+                                        <label className="block text-xs text-gray-400 mb-1">Host 1</label>
+                                        <input placeholder="Name/Persona" className="glass-input w-full p-2 rounded" value={audioConfig.host1} onChange={e => setAudioConfig({...audioConfig, host1: e.target.value})} />
+                                    </div>
+                                    <div className="w-1/2">
+                                        <label className="block text-xs text-gray-400 mb-1">Host 2</label>
+                                        <input placeholder="Name/Persona" className="glass-input w-full p-2 rounded" value={audioConfig.host2} onChange={e => setAudioConfig({...audioConfig, host2: e.target.value})} />
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    case FEATURES.DATA_TABLES:
+                         return (
+                            <div className="space-y-3">
+                                <div>
+                                    <label className="block text-xs text-gray-400 mb-1">Focus</label>
+                                    <input className="glass-input w-full p-2 rounded" value={tableConfig.focus} onChange={e => setTableConfig({...tableConfig, focus: e.target.value})} />
+                                </div>
+                                <div>
+                                    <label className="block text-xs text-gray-400 mb-1">Density</label>
+                                    <select className="glass-input w-full p-2 rounded" value={tableConfig.density} onChange={e => setTableConfig({...tableConfig, density: e.target.value})}>
+                                        {['Sparse', 'Standard', 'Comprehensive'].map(o => <option key={o} value={o} className="text-black">{o}</option>)}
+                                    </select>
+                                </div>
+                            </div>
+                         );
+                     case FEATURES.VIDEO:
+                        return (
+                            <div className="space-y-3">
+                                <div>
+                                    <label className="block text-xs text-gray-400 mb-1">Format</label>
+                                    <select className="glass-input w-full p-2 rounded" value={videoConfig.format} onChange={e => setVideoConfig({...videoConfig, format: e.target.value})}>
+                                        {['Explainer', 'Documentary', 'Tutorial'].map(o => <option key={o} value={o} className="text-black">{o}</option>)}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-xs text-gray-400 mb-1">Style</label>
+                                    <select className="glass-input w-full p-2 rounded" value={videoConfig.style} onChange={e => setVideoConfig({...videoConfig, style: e.target.value})}>
+                                        {['Classic', 'Modern', 'Cinematic'].map(o => <option key={o} value={o} className="text-black">{o}</option>)}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-xs text-gray-400 mb-1">Custom Style</label>
+                                    <input placeholder="e.g. 80s Anime" className="glass-input w-full p-2 rounded" value={videoConfig.customStyle} onChange={e => setVideoConfig({...videoConfig, customStyle: e.target.value})} />
+                                </div>
+                            </div>
+                        );
+                    case FEATURES.FLASHCARDS:
+                         return (
+                            <div className="space-y-3">
+                                <div>
+                                    <label className="block text-xs text-gray-400 mb-1">Number</label>
+                                    <select className="glass-input w-full p-2 rounded" value={cardConfig.number} onChange={e => setCardConfig({...cardConfig, number: e.target.value})}>
+                                        {['Few', 'Standard', 'More'].map(o => <option key={o} value={o} className="text-black">{o}</option>)}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-xs text-gray-400 mb-1">Difficulty</label>
+                                    <select className="glass-input w-full p-2 rounded" value={cardConfig.difficulty} onChange={e => setCardConfig({...cardConfig, difficulty: e.target.value})}>
+                                        {['Easy', 'Medium', 'Hard'].map(o => <option key={o} value={o} className="text-black">{o}</option>)}
+                                    </select>
+                                </div>
+                            </div>
+                         );
+                    case FEATURES.QUIZ:
+                         return (
+                            <div className="space-y-3">
+                                <div>
+                                    <label className="block text-xs text-gray-400 mb-1">Number</label>
+                                    <select className="glass-input w-full p-2 rounded" value={quizConfig.number} onChange={e => setQuizConfig({...quizConfig, number: e.target.value})}>
+                                        {['Few', 'Standard', 'More'].map(o => <option key={o} value={o} className="text-black">{o}</option>)}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-xs text-gray-400 mb-1">Difficulty</label>
+                                    <select className="glass-input w-full p-2 rounded" value={quizConfig.difficulty} onChange={e => setQuizConfig({...quizConfig, difficulty: e.target.value})}>
+                                        {['Easy', 'Medium', 'Hard'].map(o => <option key={o} value={o} className="text-black">{o}</option>)}
+                                    </select>
+                                </div>
+                            </div>
+                         );
+                    case FEATURES.INFOGRAPHIC:
+                        return (
+                             <div className="space-y-3">
+                                <div>
+                                    <label className="block text-xs text-gray-400 mb-1">Orientation</label>
+                                    <select className="glass-input w-full p-2 rounded" value={infoConfig.orientation} onChange={e => setInfoConfig({...infoConfig, orientation: e.target.value})}>
+                                        {['Portrait', 'Landscape', 'Square'].map(o => <option key={o} value={o} className="text-black">{o}</option>)}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-xs text-gray-400 mb-1">Detail</label>
+                                    <select className="glass-input w-full p-2 rounded" value={infoConfig.detail} onChange={e => setInfoConfig({...infoConfig, detail: e.target.value})}>
+                                        {['Simple', 'Detailed', 'Complex'].map(o => <option key={o} value={o} className="text-black">{o}</option>)}
+                                    </select>
+                                </div>
+                            </div>
+                        );
+                    case FEATURES.SLIDES:
+                        return (
+                             <div className="space-y-3">
+                                <div>
+                                    <label className="block text-xs text-gray-400 mb-1">Format</label>
+                                    <select className="glass-input w-full p-2 rounded" value={slideConfig.format} onChange={e => setSlideConfig({...slideConfig, format: e.target.value})}>
+                                        {['Overview Deck', 'Detailed Deck', 'Pitch Deck'].map(o => <option key={o} value={o} className="text-black">{o}</option>)}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-xs text-gray-400 mb-1">Length</label>
+                                    <select className="glass-input w-full p-2 rounded" value={slideConfig.length} onChange={e => setSlideConfig({...slideConfig, length: e.target.value})}>
+                                        {['Short', 'Medium', 'Long'].map(o => <option key={o} value={o} className="text-black">{o}</option>)}
+                                    </select>
+                                </div>
+                            </div>
+                        );
+                    default:
+                        return <div className="text-gray-500 italic p-2 text-sm">Standard configuration applies for {activeTab}.</div>;
+                }
+            };
+
+            return (
+                <div className="flex h-screen w-full">
+                    {/* Sidebar */}
+                    <div className="w-64 glass-panel flex flex-col p-4 space-y-2 overflow-y-auto z-10">
+                        <div className="mb-6 px-2 pt-2">
+                             <h1 className="text-2xl font-tech font-bold text-accent-primary leading-none">NotebookLM</h1>
+                             <span className="text-xs font-mono text-accent-secondary tracking-widest">// NEXT</span>
+                        </div>
+
+                        {/* API Key Input */}
+                         <div className="mb-4">
+                            <input
+                                type="password"
+                                placeholder="Gemini API Key"
+                                className="glass-input w-full p-2 rounded text-xs font-mono"
+                                onChange={(e) => { apiKey = e.target.value; }}
+                            />
+                        </div>
+
+                        {Object.values(FEATURES).map(feature => (
+                            <div
+                                key={feature}
+                                className={`nav-item p-3 rounded flex items-center space-x-3 text-sm ${activeTab === feature ? 'active' : ''}`}
+                                onClick={() => setActiveTab(feature)}
+                            >
+                                <i className={`fas ${getIcon(feature)} w-5 text-center`}></i>
+                                <span className="font-semibold">{feature}</span>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Main Content */}
+                    <div className="flex-1 flex p-6 gap-6 overflow-hidden">
+
+                        {/* Left Column: Input & Context */}
+                        <div className="w-1/3 flex flex-col space-y-4 overflow-y-auto pr-1">
+                            {/* Source Section */}
+                            <div className="glass-panel p-5 rounded-xl">
+                                <div className="flex justify-between items-center mb-3">
+                                    <h3 className="font-tech text-xl text-accent-primary">1. Source Nexus</h3>
+                                    <div className="text-xs text-gray-400">{sourceAmount} units</div>
+                                </div>
+
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    onChange={handleFileUpload}
+                                    className="hidden"
+                                />
+                                <div className="flex space-x-2 mb-3">
+                                    <button
+                                        onClick={() => fileInputRef.current.click()}
+                                        className="flex-1 glass-input p-2 rounded hover:bg-white/10 transition text-sm"
+                                    >
+                                        <i className="fas fa-upload mr-2"></i> Upload File
+                                    </button>
+                                     <button
+                                        onClick={() => setIsSourceExpanded(!isSourceExpanded)}
+                                        className="glass-input p-2 rounded hover:bg-white/10 transition text-sm"
+                                    >
+                                        <i className={`fas ${isSourceExpanded ? 'fa-compress' : 'fa-expand'}`}></i>
+                                    </button>
+                                </div>
+
+                                {isSourceExpanded && (
+                                    <textarea
+                                        className="glass-input w-full h-32 p-3 rounded mb-3 text-xs font-mono resize-y"
+                                        placeholder="Paste raw text here..."
+                                        value={sourceContent}
+                                        onChange={(e) => setSourceContent(e.target.value)}
+                                    />
+                                )}
+
+                                <textarea
+                                    className="glass-input w-full h-24 p-3 rounded text-sm resize-none"
+                                    placeholder="Describe your source structure (e.g. '7 Modules with 3 quizzes each')..."
+                                    value={sourceDescription}
+                                    onChange={(e) => setSourceDescription(e.target.value)}
+                                />
+
+                                <button
+                                    onClick={handleAutoSynergy}
+                                    disabled={isAutoSynergy}
+                                    className="mt-3 w-full bg-gradient-to-r from-purple-600 to-blue-600 p-2 rounded font-bold text-sm tracking-wide hover:brightness-110 transition disabled:opacity-50 synergy-orb"
+                                >
+                                    {isAutoSynergy ? <i className="fas fa-spinner fa-spin"></i> : <><i className="fas fa-sparkles mr-2"></i> AUTO-SYNERGY</>}
+                                </button>
+                            </div>
+
+                            {/* Configuration */}
+                            <div className="glass-panel p-5 rounded-xl flex-1">
+                                <h3 className="font-tech text-xl mb-3">3. Configuration</h3>
+                                {renderConfig()}
+                            </div>
+                        </div>
+
+                        {/* Middle Column: Goal & Strategy */}
+                        <div className="w-1/3 flex flex-col space-y-4">
+                             <div className="glass-panel p-5 rounded-xl flex-1 flex flex-col">
+                                <h3 className="font-tech text-xl text-accent-secondary mb-3">2. Strategic Goal</h3>
+                                <div className="flex-1 relative">
+                                    <textarea
+                                        className="glass-input w-full h-full p-4 rounded-lg resize-none text-sm leading-relaxed"
+                                        placeholder={`What is your goal for ${activeTab}?`}
+                                        value={featureGoals[activeTab]}
+                                        onChange={(e) => setFeatureGoals({...featureGoals, [activeTab]: e.target.value})}
+                                    />
+                                    <div className="absolute bottom-4 right-4 flex space-x-2">
+                                        <button
+                                            onClick={handleBrainstorm}
+                                            disabled={isBrainstorming}
+                                            className="bg-black/50 hover:bg-white/10 text-xs px-3 py-1 rounded border border-white/10 transition"
+                                        >
+                                            {isBrainstorming ? "..." : "Brainstorm"}
+                                        </button>
+                                        <button
+                                            onClick={handleRefineGoal}
+                                            disabled={isRefining}
+                                            className="bg-black/50 hover:bg-white/10 text-xs px-3 py-1 rounded border border-white/10 transition"
+                                        >
+                                            {isRefining ? "..." : "Refine"}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Suggestions Area */}
+                                {suggestions.length > 0 && (
+                                    <div className="mt-4 space-y-2 animate-pulse">
+                                        <div className="text-xs text-gray-400 font-mono">SUGGESTED ANGLES:</div>
+                                        {suggestions.map((s, i) => (
+                                            <div key={i} className="glass-input p-2 rounded text-xs cursor-pointer hover:bg-white/5" onClick={() => setFeatureGoals({...featureGoals, [activeTab]: s})}>
+                                                {s}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                             </div>
+                        </div>
+
+                        {/* Right Column: Output */}
+                        <div className="w-1/3 flex flex-col">
+                            <div className="glass-panel p-1 rounded-xl flex-1 flex flex-col relative overflow-hidden">
+                                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent-primary to-transparent opacity-50"></div>
+
+                                <div className="p-4 flex justify-between items-center border-b border-white/5">
+                                    <h3 className="font-tech text-xl">Prompt Output</h3>
+                                    <button
+                                        onClick={generatePrompt}
+                                        disabled={isGenerating}
+                                        className="bg-white text-black font-bold px-6 py-2 rounded shadow-[0_0_15px_rgba(255,255,255,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.5)] transition disabled:opacity-50"
+                                    >
+                                        {isGenerating ? "PROCESSING..." : "GENERATE"}
+                                    </button>
+                                </div>
+
+                                <div className="flex-1 p-4 relative">
+                                    <textarea
+                                        className="w-full h-full bg-transparent outline-none font-mono text-sm text-green-400 resize-none p-2"
+                                        readOnly
+                                        value={generatedPrompt || "// Ready to generate..."}
+                                    />
+                                    {generatedPrompt && (
+                                        <button
+                                            onClick={copyToClipboard}
+                                            className="absolute bottom-6 right-6 glass-input px-4 py-2 rounded hover:bg-white/20 transition backdrop-blur-md"
+                                        >
+                                            <i className="fas fa-copy mr-2"></i> Copy
+                                        </button>
+                                    )}
+                                </div>
+
+                                {aiError && (
+                                    <div className="p-3 bg-red-900/50 border-t border-red-500/30 text-red-200 text-xs">
+                                        <i className="fas fa-exclamation-triangle mr-2"></i> {aiError}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<Generator />);
+    </script>
+</body>
+</html>
