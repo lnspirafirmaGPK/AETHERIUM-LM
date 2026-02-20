@@ -2,7 +2,6 @@ import asyncio
 import os
 import sys
 import logging
-from typing import List
 from unittest.mock import MagicMock, AsyncMock, patch
 
 import litellm
@@ -16,7 +15,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 from app.db import SearchSpace, LLMConfig, ProviderType
 from app.services.llm_service import get_fast_llm, validate_llm_config, get_text_embedding
 
-async def test_get_fast_llm():
+def test_get_fast_llm():
     print("Testing get_fast_llm logic...")
 
     # Mock Session
@@ -45,14 +44,14 @@ async def test_get_fast_llm():
     # side_effect needs to be an iterable that yields return values
     mock_session.execute.side_effect = [mock_result_ss, mock_result_lc]
 
-    llm = await get_fast_llm(mock_session, 1)
+    llm = asyncio.run(get_fast_llm(mock_session, 1))
 
     assert llm is not None
     # ChatLiteLLM stores model string in .model
     assert llm.model == "openai/gpt-3.5-turbo"
     print("get_fast_llm test passed!")
 
-async def test_validate_llm_config():
+def test_validate_llm_config():
     print("Testing validate_llm_config logic...")
 
     # Mock ChatLiteLLM to avoid network calls
@@ -66,11 +65,11 @@ async def test_validate_llm_config():
             return mock_response
         mock_instance.ainvoke = async_mock
 
-        is_valid, error = await validate_llm_config(
+        is_valid, error = asyncio.run(validate_llm_config(
             provider="OPENAI",
             model_name="gpt-4",
             api_key="sk-test-key"
-        )
+        ))
         assert is_valid is True
         assert error == ""
 
@@ -81,17 +80,33 @@ async def test_validate_llm_config():
              raise litellm.AuthenticationError("Auth failed", llm_provider="openai", model="gpt-4")
         mock_instance.ainvoke = async_mock_auth_error
 
-        is_valid, error = await validate_llm_config(
+        is_valid, error = asyncio.run(validate_llm_config(
             provider="OPENAI",
             model_name="gpt-4",
             api_key="sk-test-key"
-        )
+        ))
         assert is_valid is False
         assert "Authentication failed" in error
 
+
+
+        # 3. Test provider passed as Enum-like object
+        mock_instance.ainvoke = async_mock
+
+        class ProviderEnumLike:
+            value = "OPENAI"
+
+        is_valid, error = asyncio.run(validate_llm_config(
+            provider=ProviderEnumLike(),
+            model_name="gpt-4",
+            api_key="sk-test-key"
+        ))
+        assert is_valid is True
+        assert error == ""
+
         print("validate_llm_config test passed!")
 
-async def test_get_text_embedding():
+def test_get_text_embedding():
     print("Testing get_text_embedding logic...")
 
     with patch("app.services.llm_service.litellm_embedding") as mock_embedding:
@@ -102,11 +117,11 @@ async def test_get_text_embedding():
             ]
         }
 
-        embedding = await get_text_embedding(
+        embedding = asyncio.run(get_text_embedding(
             text="hello",
             model_name="text-embedding-3-small",
             api_key="sk-test"
-        )
+        ))
 
         assert isinstance(embedding, list)
         assert len(embedding) == 3
@@ -120,11 +135,11 @@ async def test_get_text_embedding():
             ]
         }
 
-        embeddings = await get_text_embedding(
+        embeddings = asyncio.run(get_text_embedding(
             text=["hello", "world"],
             model_name="text-embedding-3-small",
             api_key="sk-test"
-        )
+        ))
 
         assert isinstance(embeddings, list)
         assert len(embeddings) == 2
@@ -133,9 +148,6 @@ async def test_get_text_embedding():
         print("get_text_embedding test passed!")
 
 if __name__ == "__main__":
-    async def main():
-        await test_get_fast_llm()
-        await test_validate_llm_config()
-        await test_get_text_embedding()
-
-    asyncio.run(main())
+    test_get_fast_llm()
+    test_validate_llm_config()
+    test_get_text_embedding()
