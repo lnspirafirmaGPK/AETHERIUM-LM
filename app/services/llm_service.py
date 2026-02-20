@@ -1,4 +1,5 @@
 import logging
+from enum import Enum
 from typing import List, Union
 
 import litellm
@@ -69,6 +70,9 @@ async def validate_llm_config(
         - error_message: Empty string if valid, error description if invalid
     """
     try:
+        # Accept enum-like providers from API/ORM callers.
+        provider_name = provider.value if isinstance(provider, Enum) else str(provider)
+
         # Build the model string for litellm
         if custom_provider:
             model_string = f"{custom_provider}/{model_name}"
@@ -106,7 +110,7 @@ async def validate_llm_config(
                 "MOONSHOT": "openai",
                 "ZHIPU": "openai",  # GLM needs special handling
             }
-            provider_prefix = provider_map.get(provider, provider.lower())
+            provider_prefix = provider_map.get(provider_name.upper(), provider_name.lower())
             model_string = f"{provider_prefix}/{model_name}"
 
         # Create ChatLiteLLM instance
@@ -155,7 +159,7 @@ async def get_text_embedding(
     model_name: str,
     api_key: str,
     api_base: str | None = None,
-    provider: str = "openai"
+    provider: str | Enum = "openai"
 ) -> Union[List[float], List[List[float]]]:
     """
     Generate embeddings using LiteLLM.
@@ -172,8 +176,11 @@ async def get_text_embedding(
         List of floats (if input is str) or List of List of floats (if input is list)
     """
     try:
+        # Accept enum-like providers from API/ORM callers.
+        provider_name = provider.value if isinstance(provider, Enum) else str(provider)
+
         # Construct model string
-        model_string = f"{provider}/{model_name}" if "/" not in model_name else model_name
+        model_string = f"{provider_name.lower()}/{model_name}" if "/" not in model_name else model_name
 
         response = litellm_embedding(
             model=model_string,
