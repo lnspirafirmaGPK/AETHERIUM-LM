@@ -18,6 +18,58 @@ litellm.drop_params = True
 logger = logging.getLogger(__name__)
 
 
+PROVIDER_MAP = {
+    "OPENAI": "openai",
+    "ANTHROPIC": "anthropic",
+    "GROQ": "groq",
+    "COHERE": "cohere",
+    "GOOGLE": "gemini",
+    "OLLAMA": "ollama",
+    "MISTRAL": "mistral",
+    "AZURE_OPENAI": "azure",
+    "OPENROUTER": "openrouter",
+    "COMETAPI": "cometapi",
+    "XAI": "xai",
+    "BEDROCK": "bedrock",
+    "AWS_BEDROCK": "bedrock",  # Legacy support (backward compatibility)
+    "VERTEX_AI": "vertex_ai",
+    "TOGETHER_AI": "together_ai",
+    "FIREWORKS_AI": "fireworks_ai",
+    "REPLICATE": "replicate",
+    "PERPLEXITY": "perplexity",
+    "ANYSCALE": "anyscale",
+    "DEEPINFRA": "deepinfra",
+    "CEREBRAS": "cerebras",
+    "SAMBANOVA": "sambanova",
+    "AI21": "ai21",
+    "CLOUDFLARE": "cloudflare",
+    "DATABRICKS": "databricks",
+    # Chinese LLM providers
+    "DEEPSEEK": "openai",
+    "ALIBABA_QWEN": "openai",
+    "MOONSHOT": "openai",
+    "ZHIPU": "openai",
+}
+
+
+def _build_model_string(
+    model_name: str,
+    provider: str | Enum,
+    custom_provider: str | None = None,
+) -> str:
+    """Create a litellm model string with provider alias normalization."""
+    if custom_provider:
+        return f"{custom_provider}/{model_name}"
+
+    # If a provider prefix is already present, keep it unchanged.
+    if "/" in model_name:
+        return model_name
+
+    provider_name = provider.value if isinstance(provider, Enum) else str(provider)
+    provider_prefix = PROVIDER_MAP.get(provider_name.upper(), provider_name.lower())
+    return f"{provider_prefix}/{model_name}"
+
+
 class LLMRole:
     LONG_CONTEXT = "long_context"
     FAST = "fast"
@@ -70,48 +122,12 @@ async def validate_llm_config(
         - error_message: Empty string if valid, error description if invalid
     """
     try:
-        # Accept enum-like providers from API/ORM callers.
-        provider_name = provider.value if isinstance(provider, Enum) else str(provider)
-
         # Build the model string for litellm
-        if custom_provider:
-            model_string = f"{custom_provider}/{model_name}"
-        else:
-            # Map provider enum to litellm format
-            provider_map = {
-                "OPENAI": "openai",
-                "ANTHROPIC": "anthropic",
-                "GROQ": "groq",
-                "COHERE": "cohere",
-                "GOOGLE": "gemini",
-                "OLLAMA": "ollama",
-                "MISTRAL": "mistral",
-                "AZURE_OPENAI": "azure",
-                "OPENROUTER": "openrouter",
-                "COMETAPI": "cometapi",
-                "XAI": "xai",
-                "BEDROCK": "bedrock",
-                "AWS_BEDROCK": "bedrock",  # Legacy support (backward compatibility)
-                "VERTEX_AI": "vertex_ai",
-                "TOGETHER_AI": "together_ai",
-                "FIREWORKS_AI": "fireworks_ai",
-                "REPLICATE": "replicate",
-                "PERPLEXITY": "perplexity",
-                "ANYSCALE": "anyscale",
-                "DEEPINFRA": "deepinfra",
-                "CEREBRAS": "cerebras",
-                "SAMBANOVA": "sambanova",
-                "AI21": "ai21",
-                "CLOUDFLARE": "cloudflare",
-                "DATABRICKS": "databricks",
-                # Chinese LLM providers
-                "DEEPSEEK": "openai",
-                "ALIBABA_QWEN": "openai",
-                "MOONSHOT": "openai",
-                "ZHIPU": "openai",  # GLM needs special handling
-            }
-            provider_prefix = provider_map.get(provider_name.upper(), provider_name.lower())
-            model_string = f"{provider_prefix}/{model_name}"
+        model_string = _build_model_string(
+            model_name=model_name,
+            provider=provider,
+            custom_provider=custom_provider,
+        )
 
         # Create ChatLiteLLM instance
         litellm_kwargs = {
@@ -176,11 +192,11 @@ async def get_text_embedding(
         List of floats (if input is str) or List of List of floats (if input is list)
     """
     try:
-        # Accept enum-like providers from API/ORM callers.
-        provider_name = provider.value if isinstance(provider, Enum) else str(provider)
-
         # Construct model string
-        model_string = f"{provider_name.lower()}/{model_name}" if "/" not in model_name else model_name
+        model_string = _build_model_string(
+            model_name=model_name,
+            provider=provider,
+        )
 
         response = litellm_embedding(
             model=model_string,
@@ -249,46 +265,11 @@ async def get_search_space_llm_instance(
                 return None
 
             # Build model string for global config
-            if global_config.get("custom_provider"):
-                model_string = (
-                    f"{global_config['custom_provider']}/{global_config['model_name']}"
-                )
-            else:
-                provider_map = {
-                    "OPENAI": "openai",
-                    "ANTHROPIC": "anthropic",
-                    "GROQ": "groq",
-                    "COHERE": "cohere",
-                    "GOOGLE": "gemini",
-                    "OLLAMA": "ollama",
-                    "MISTRAL": "mistral",
-                    "AZURE_OPENAI": "azure",
-                    "OPENROUTER": "openrouter",
-                    "COMETAPI": "cometapi",
-                    "XAI": "xai",
-                    "BEDROCK": "bedrock",
-                    "AWS_BEDROCK": "bedrock",
-                    "VERTEX_AI": "vertex_ai",
-                    "TOGETHER_AI": "together_ai",
-                    "FIREWORKS_AI": "fireworks_ai",
-                    "REPLICATE": "replicate",
-                    "PERPLEXITY": "perplexity",
-                    "ANYSCALE": "anyscale",
-                    "DEEPINFRA": "deepinfra",
-                    "CEREBRAS": "cerebras",
-                    "SAMBANOVA": "sambanova",
-                    "AI21": "ai21",
-                    "CLOUDFLARE": "cloudflare",
-                    "DATABRICKS": "databricks",
-                    "DEEPSEEK": "openai",
-                    "ALIBABA_QWEN": "openai",
-                    "MOONSHOT": "openai",
-                    "ZHIPU": "openai",
-                }
-                provider_prefix = provider_map.get(
-                    global_config["provider"], global_config["provider"].lower()
-                )
-                model_string = f"{provider_prefix}/{global_config['model_name']}"
+            model_string = _build_model_string(
+                model_name=global_config["model_name"],
+                provider=global_config["provider"],
+                custom_provider=global_config.get("custom_provider"),
+            )
 
             # Create ChatLiteLLM instance from global config
             litellm_kwargs = {
@@ -325,49 +306,11 @@ async def get_search_space_llm_instance(
             return None
 
         # Build the model string for litellm / 构建 LiteLLM 的模型字符串
-        if llm_config.custom_provider:
-            model_string = f"{llm_config.custom_provider}/{llm_config.model_name}"
-        else:
-            # Map provider enum to litellm format / 将提供商枚举映射为 LiteLLM 格式
-            provider_map = {
-                "OPENAI": "openai",
-                "ANTHROPIC": "anthropic",
-                "GROQ": "groq",
-                "COHERE": "cohere",
-                "GOOGLE": "gemini",
-                "OLLAMA": "ollama",
-                "MISTRAL": "mistral",
-                "AZURE_OPENAI": "azure",
-                "OPENROUTER": "openrouter",
-                "COMETAPI": "cometapi",
-                "XAI": "xai",
-                "BEDROCK": "bedrock",
-                "AWS_BEDROCK": "bedrock",  # Legacy support (backward compatibility)
-                "VERTEX_AI": "vertex_ai",
-                "TOGETHER_AI": "together_ai",
-                "FIREWORKS_AI": "fireworks_ai",
-                "REPLICATE": "replicate",
-                "PERPLEXITY": "perplexity",
-                "ANYSCALE": "anyscale",
-                "DEEPINFRA": "deepinfra",
-                "CEREBRAS": "cerebras",
-                "SAMBANOVA": "sambanova",
-                "AI21": "ai21",
-                "CLOUDFLARE": "cloudflare",
-                "DATABRICKS": "databricks",
-                # Chinese LLM providers
-                "DEEPSEEK": "openai",
-                "ALIBABA_QWEN": "openai",
-                "MOONSHOT": "openai",
-                "ZHIPU": "openai",
-            }
-            # Access provider value from Enum
-            provider_name = llm_config.provider.value if hasattr(llm_config.provider, 'value') else llm_config.provider
-
-            provider_prefix = provider_map.get(
-                provider_name, str(provider_name).lower()
-            )
-            model_string = f"{provider_prefix}/{llm_config.model_name}"
+        model_string = _build_model_string(
+            model_name=llm_config.model_name,
+            provider=llm_config.provider,
+            custom_provider=llm_config.custom_provider,
+        )
 
         # Create ChatLiteLLM instance
         litellm_kwargs = {

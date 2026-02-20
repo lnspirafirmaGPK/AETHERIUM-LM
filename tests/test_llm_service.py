@@ -106,6 +106,45 @@ def test_validate_llm_config():
 
         print("validate_llm_config test passed!")
 
+
+
+def test_get_text_embedding_provider_aliases():
+    print("Testing get_text_embedding provider aliases...")
+
+    with patch("app.services.llm_service.litellm_embedding") as mock_embedding:
+        mock_embedding.return_value = {
+            "data": [
+                {"embedding": [0.1, 0.2, 0.3]}
+            ]
+        }
+
+        # Enum provider should be normalized using provider aliases.
+        embedding = asyncio.run(get_text_embedding(
+            text="hello",
+            model_name="text-embedding-004",
+            api_key="sk-test",
+            provider=ProviderType.GOOGLE,
+        ))
+
+        assert embedding == [0.1, 0.2, 0.3]
+        assert mock_embedding.call_args.kwargs["model"] == "gemini/text-embedding-004"
+
+        # Already-prefixed model names should be passed through unchanged.
+        embedding = asyncio.run(get_text_embedding(
+            text="hello",
+            model_name="openai/text-embedding-3-small",
+            api_key="sk-test",
+            provider=ProviderType.OPENAI,
+        ))
+
+        assert embedding == [0.1, 0.2, 0.3]
+        assert (
+            mock_embedding.call_args.kwargs["model"]
+            == "openai/text-embedding-3-small"
+        )
+
+        print("get_text_embedding provider alias test passed!")
+
 def test_get_text_embedding():
     print("Testing get_text_embedding logic...")
 
