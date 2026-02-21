@@ -1,0 +1,207 @@
+<!-- Aetherium Crystal Infographic View -->
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aetherium Crystal Infographic View</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#25d1f4",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#050b1a", // Deep sea blue base
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(37, 209, 244, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .crystal-edge {
+            clip-path: polygon(5% 0%, 95% 0%, 100% 15%, 100% 85%, 95% 100%, 5% 100%, 0% 85%, 0% 15%);
+        }
+        .caustic-bg {
+            background: radial-gradient(circle at 20% 30%, rgba(37, 209, 244, 0.15) 0%, transparent 40%),
+                        radial-gradient(circle at 80% 70%, rgba(37, 209, 244, 0.1) 0%, transparent 40%),
+                        linear-gradient(180deg, #050b1a 0%, #0a1628 100%);
+        }
+        .prism-glow {
+            filter: drop-shadow(0 0 15px rgba(37, 209, 244, 0.4));
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased min-h-screen flex flex-col caustic-bg overflow-x-hidden">
+<!-- Header Navigation -->
+<header class="flex items-center justify-between p-6 pt-12">
+<button class="w-10 h-10 flex items-center justify-center rounded-lg glass-panel text-primary">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<div class="text-center">
+<h1 class="text-xs font-bold tracking-[0.4em] text-primary uppercase opacity-80">Aetherium Analysis</h1>
+<p class="text-[10px] text-slate-400 tracking-widest mt-1 uppercase">Synthesis Engine v4.0</p>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg glass-panel text-primary">
+<span class="material-symbols-outlined">share</span>
+</button>
+</header>
+<!-- Main Content Scroll Area -->
+<main class="flex-1 px-6 pb-24 overflow-y-auto space-y-8">
+<!-- Core Insight Section -->
+<section class="relative mt-4">
+<div class="absolute -top-10 -left-10 w-40 h-40 bg-primary/10 rounded-full blur-[80px]"></div>
+<div class="glass-panel crystal-edge p-8 relative overflow-hidden prism-glow">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/40 to-transparent"></div>
+<div class="flex flex-col items-center text-center space-y-4">
+<span class="material-symbols-outlined text-primary text-4xl mb-2">diamond</span>
+<h2 class="text-2xl font-light tracking-tight text-white uppercase">Core Insight</h2>
+<p class="text-slate-300 font-light leading-relaxed text-sm max-w-xs italic">
+                        "The convergence of neural architecture and mystical data reveals a crystalline pattern of hyper-productivity localized in the pre-dawn cycles."
+                    </p>
+<div class="flex gap-2 mt-4">
+<span class="px-3 py-1 text-[10px] border border-primary/30 text-primary rounded-full uppercase tracking-tighter">AI Synthesized</span>
+<span class="px-3 py-1 text-[10px] border border-white/20 text-slate-300 rounded-full uppercase tracking-tighter">98% Resonance</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Synthesis Journey Timeline -->
+<section class="space-y-6">
+<h3 class="text-[10px] font-bold tracking-[0.3em] text-slate-400 uppercase px-2">Synthesis Journey</h3>
+<div class="relative pl-8 space-y-8 before:content-[''] before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[1px] before:bg-gradient-to-b before:from-primary/50 before:via-primary/10 before:to-primary/50">
+<!-- Timeline Node 1 -->
+<div class="relative group">
+<div class="absolute -left-[29px] top-1 w-5 h-5 bg-background-dark border-2 border-primary rounded-sm rotate-45 flex items-center justify-center shadow-[0_0_10px_rgba(37,209,244,0.5)]">
+<div class="w-1.5 h-1.5 bg-primary rounded-full"></div>
+</div>
+<div class="glass-panel p-4 crystal-edge flex flex-col gap-1 hover:border-primary/40 transition-colors">
+<div class="flex justify-between items-start">
+<h4 class="text-sm font-medium text-white">Data Ingestion</h4>
+<span class="text-[10px] text-primary/60 font-mono tracking-tighter">10:00:14 AM</span>
+</div>
+<p class="text-xs text-slate-400 font-light">Parsing 1.2M mystical data points via Aether-net.</p>
+</div>
+</div>
+<!-- Timeline Node 2 -->
+<div class="relative group">
+<div class="absolute -left-[29px] top-1 w-5 h-5 bg-background-dark border-2 border-primary/40 rounded-sm rotate-45 flex items-center justify-center">
+<div class="w-1.5 h-1.5 bg-primary/40 rounded-full"></div>
+</div>
+<div class="glass-panel p-4 crystal-edge flex flex-col gap-1">
+<div class="flex justify-between items-start">
+<h4 class="text-sm font-medium text-white">Pattern Recognition</h4>
+<span class="text-[10px] text-primary/60 font-mono tracking-tighter">10:15:22 AM</span>
+</div>
+<p class="text-xs text-slate-400 font-light">Identifying geometric anomalies in workflow structures.</p>
+</div>
+</div>
+<!-- Timeline Node 3 -->
+<div class="relative group">
+<div class="absolute -left-[29px] top-1 w-5 h-5 bg-background-dark border-2 border-primary/20 rounded-sm rotate-45 flex items-center justify-center">
+<div class="w-1.5 h-1.5 bg-primary/20 rounded-full"></div>
+</div>
+<div class="glass-panel p-4 crystal-edge flex flex-col gap-1">
+<div class="flex justify-between items-start">
+<h4 class="text-sm font-medium text-white">Crystal Synthesis</h4>
+<span class="text-[10px] text-primary/60 font-mono tracking-tighter">10:30:05 AM</span>
+</div>
+<p class="text-xs text-slate-400 font-light">Solidifying abstract concepts into actionable milestones.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Resonance Metrics Pillar Chart -->
+<section class="space-y-6">
+<h3 class="text-[10px] font-bold tracking-[0.3em] text-slate-400 uppercase px-2">Resonance Metrics</h3>
+<div class="glass-panel crystal-edge p-6 flex items-end justify-between h-48 gap-4">
+<!-- Pillar 1 -->
+<div class="flex-1 flex flex-col items-center gap-3 h-full justify-end">
+<div class="w-full bg-gradient-to-t from-primary/10 via-primary/30 to-primary rounded-t-sm relative group h-[40%]" title="40%">
+<div class="absolute -top-1 left-0 right-0 h-[2px] bg-primary shadow-[0_0_8px_#25d1f4]"></div>
+</div>
+<span class="text-[9px] uppercase tracking-tighter text-slate-500 font-bold">Focus</span>
+</div>
+<!-- Pillar 2 -->
+<div class="flex-1 flex flex-col items-center gap-3 h-full justify-end">
+<div class="w-full bg-gradient-to-t from-primary/10 via-primary/30 to-primary rounded-t-sm relative group h-[85%]" title="85%">
+<div class="absolute -top-1 left-0 right-0 h-[2px] bg-primary shadow-[0_0_8px_#25d1f4]"></div>
+</div>
+<span class="text-[9px] uppercase tracking-tighter text-slate-500 font-bold">Clarity</span>
+</div>
+<!-- Pillar 3 -->
+<div class="flex-1 flex flex-col items-center gap-3 h-full justify-end">
+<div class="w-full bg-gradient-to-t from-primary/10 via-primary/30 to-primary rounded-t-sm relative group h-[60%]" title="60%">
+<div class="absolute -top-1 left-0 right-0 h-[2px] bg-primary shadow-[0_0_8px_#25d1f4]"></div>
+</div>
+<span class="text-[9px] uppercase tracking-tighter text-slate-500 font-bold">Flow</span>
+</div>
+<!-- Pillar 4 -->
+<div class="flex-1 flex flex-col items-center gap-3 h-full justify-end">
+<div class="w-full bg-gradient-to-t from-primary/10 via-primary/30 to-primary rounded-t-sm relative group h-[95%]" title="95%">
+<div class="absolute -top-1 left-0 right-0 h-[2px] bg-primary shadow-[0_0_8px_#25d1f4]"></div>
+</div>
+<span class="text-[9px] uppercase tracking-tighter text-slate-500 font-bold">Zenith</span>
+</div>
+<!-- Pillar 5 -->
+<div class="flex-1 flex flex-col items-center gap-3 h-full justify-end">
+<div class="w-full bg-gradient-to-t from-primary/10 via-primary/30 to-primary rounded-t-sm relative group h-[70%]" title="70%">
+<div class="absolute -top-1 left-0 right-0 h-[2px] bg-primary shadow-[0_0_8px_#25d1f4]"></div>
+</div>
+<span class="text-[9px] uppercase tracking-tighter text-slate-500 font-bold">Depth</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Bottom Navigation -->
+<nav class="fixed bottom-6 left-6 right-6 h-16 glass-panel rounded-xl flex items-center justify-around px-4 border-primary/20">
+<a class="flex flex-col items-center justify-center text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined font-light">home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined font-light">search</span>
+</a>
+<div class="relative -top-6">
+<div class="w-14 h-14 bg-background-dark border border-primary/40 rounded-full flex items-center justify-center rotate-45 shadow-[0_0_20px_rgba(37,209,244,0.3)] group cursor-pointer active:scale-95 transition-all">
+<span class="material-symbols-outlined text-primary -rotate-45 text-3xl font-light">auto_awesome</span>
+</div>
+</div>
+<a class="flex flex-col items-center justify-center text-primary transition-colors" href="#">
+<span class="material-symbols-outlined font-fill-1">bar_chart</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined font-light">book_2</span>
+</a>
+</nav>
+<!-- Caustic Refraction Elements (Abstract Background Visuals) -->
+<div class="fixed inset-0 pointer-events-none -z-10">
+<div class="absolute top-1/4 -right-20 w-80 h-80 bg-primary/5 rounded-full blur-[120px]"></div>
+<div class="absolute bottom-1/4 -left-20 w-80 h-80 bg-blue-600/5 rounded-full blur-[120px]"></div>
+<div class="absolute inset-0 opacity-[0.03] mix-blend-overlay bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" data-alt="Subtle geometric texture overlay"></div>
+</div>
+</body></html>

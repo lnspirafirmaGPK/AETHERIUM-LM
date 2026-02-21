@@ -1,0 +1,187 @@
+<!-- Aetherium Audio Overview Player -->
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#8c2bee",
+            "background-light": "#f7f6f8",
+            "background-dark": "#0d0614",
+            "glass-border": "rgba(255, 255, 255, 0.1)",
+          },
+          fontFamily: {
+            "display": ["Space Grotesk", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "1rem",
+            "lg": "2rem",
+            "xl": "3rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style type="text/tailwindcss">
+    :root {
+      --glass-bg: rgba(25, 16, 34, 0.6);
+      --glass-blur: blur(20px);
+    }
+    .glass-morphism {
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .aether-glow {
+      box-shadow: 0 0 40px 5px rgba(140, 43, 238, 0.2);
+    }
+    .gradient-bg {
+      background: radial-gradient(circle at 20% 20%, #1e1231 0%, #0d0614 100%);
+    }
+    .dimension-perspective {
+      perspective: 1200px;
+    }
+    .slide-layer {
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+    .slide-back-1 {
+      transform: translateZ(-60px) translateY(-20px) scale(0.9);
+      opacity: 0.4;
+      filter: blur(2px);
+    }
+    .slide-back-2 {
+      transform: translateZ(-120px) translateY(-40px) scale(0.8);
+      opacity: 0.2;
+      filter: blur(4px);
+    }
+    .lens-flare {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(140, 43, 238, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .chart-line {
+      stroke-dasharray: 100;
+      stroke-dashoffset: 0;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-dark font-display text-slate-100 antialiased overflow-hidden">
+<div class="relative flex h-screen w-full flex-col gradient-bg overflow-hidden mx-auto max-w-md">
+<div class="lens-flare top-[-50px] left-[-50px]"></div>
+<div class="lens-flare bottom-[10%] right-[-80px]"></div>
+<header class="flex items-center justify-between p-6 pt-12 z-20">
+<button class="size-10 flex items-center justify-center rounded-full glass-morphism text-slate-100">
+<span class="material-symbols-outlined">close</span>
+</button>
+<div class="text-center">
+<h2 class="text-xs uppercase tracking-[0.3em] text-primary font-bold">Dimensional Deck</h2>
+<p class="text-[10px] text-slate-400 mt-1 uppercase tracking-widest">Synthesis Layer 04</p>
+</div>
+<button class="size-10 flex items-center justify-center rounded-full glass-morphism text-slate-100">
+<span class="material-symbols-outlined">share</span>
+</button>
+</header>
+<main class="flex-1 flex flex-col items-center justify-center px-6 relative dimension-perspective">
+<div class="absolute w-[85%] aspect-[3/4] rounded-2xl glass-morphism slide-layer slide-back-2 border-white/5"></div>
+<div class="absolute w-[90%] aspect-[3/4] rounded-2xl glass-morphism slide-layer slide-back-1 border-white/10"></div>
+<div class="relative w-full aspect-[3/4] rounded-2xl glass-morphism aether-glow p-8 border border-white/20 flex flex-col z-10">
+<div class="flex justify-between items-start mb-8">
+<div class="space-y-1">
+<span class="text-[10px] font-bold text-primary uppercase tracking-widest">Macro Trends</span>
+<h1 class="text-2xl font-bold leading-tight">Neural Entropy &amp; <br/>Data Flow</h1>
+</div>
+<div class="size-8 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/30">
+<span class="material-symbols-outlined text-primary text-sm">auto_awesome</span>
+</div>
+</div>
+<div class="flex-1 flex flex-col justify-center">
+<div class="relative h-32 w-full mt-4">
+<svg class="w-full h-full" viewBox="0 0 200 100">
+<defs>
+<linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#8c2bee" stop-opacity="0.5"></stop>
+<stop offset="100%" stop-color="#8c2bee" stop-opacity="0"></stop>
+</linearGradient>
+</defs>
+<path d="M0,80 Q30,20 60,60 T120,40 T200,10 L200,100 L0,100 Z" fill="url(#chartGradient)"></path>
+<path class="chart-line" d="M0,80 Q30,20 60,60 T120,40 T200,10" fill="none" stroke="#8c2bee" stroke-width="2"></path>
+<circle class="animate-pulse" cx="120" cy="40" fill="#8c2bee" r="3"></circle>
+</svg>
+<div class="absolute top-2 left-[115px] glass-morphism px-2 py-1 rounded text-[8px] border-white/10 font-medium">
+                        +24.8% INFLECTION
+                    </div>
+</div>
+<div class="mt-8 space-y-4">
+<p class="text-sm text-slate-300 leading-relaxed">
+                        The convergence of <span class="text-white font-medium">multi-modal synthesis</span> creates a stable aetheric field for higher-order reasoning.
+                    </p>
+<div class="flex gap-2">
+<span class="px-2 py-1 rounded bg-white/5 border border-white/10 text-[9px] text-slate-400">#ALCHEMY</span>
+<span class="px-2 py-1 rounded bg-white/5 border border-white/10 text-[9px] text-slate-400">#NEURAL</span>
+</div>
+</div>
+</div>
+<div class="mt-auto pt-6 border-t border-white/5 flex justify-between items-center">
+<span class="text-[10px] text-slate-500 font-medium uppercase tracking-widest">Dimension 04 // 12</span>
+<div class="flex gap-1">
+<div class="w-4 h-1 rounded-full bg-primary"></div>
+<div class="w-1.5 h-1 rounded-full bg-white/20"></div>
+<div class="w-1.5 h-1 rounded-full bg-white/20"></div>
+</div>
+</div>
+</div>
+<div class="flex gap-4 mt-8 z-20">
+<button class="flex items-center gap-2 px-6 py-3 rounded-full glass-morphism border-white/20 hover:bg-white/10 transition-all active:scale-95 shadow-xl">
+<span class="material-symbols-outlined text-sm text-primary">play_arrow</span>
+<span class="text-xs font-bold uppercase tracking-widest">Present</span>
+</button>
+<button class="size-12 flex items-center justify-center rounded-full glass-morphism border-white/20 hover:bg-white/10 transition-all active:scale-95 shadow-xl text-slate-300">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</div>
+</main>
+<nav class="glass-morphism border-t border-white/5 px-6 pb-8 pt-4 z-20">
+<div class="flex justify-between items-center">
+<a class="flex flex-col items-center gap-1 text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">database</span>
+<span class="text-[10px] font-medium">Sources</span>
+</a>
+<a class="relative -top-4 size-14 flex items-center justify-center rounded-full bg-primary text-white shadow-xl shadow-primary/30 ring-4 ring-background-dark" href="#">
+<span class="material-symbols-outlined text-2xl">magic_button</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined fill-1">layers</span>
+<span class="text-[10px] font-medium">Decks</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="text-[10px] font-medium">Profile</span>
+</a>
+</div>
+</nav>
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full z-30"></div>
+</div>
+
+</body></html>

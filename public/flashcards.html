@@ -1,0 +1,169 @@
+<!-- Aetherium Oracle Flashcards V1 -->
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aetherium Oracle Flashcards V1</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f4c025",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#0a0904",
+                        "ethereal-blue": "#4cc9f0",
+                        "ethereal-purple": "#7209b7",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(244, 192, 37, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(244, 192, 37, 0.1);
+        }
+        .nebula-bg {
+            background: radial-gradient(circle at 50% 50%, #1a1608 0%, #0a0904 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .nebula-bg::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background-image: radial-gradient(circle at 30% 20%, rgba(114, 9, 183, 0.1) 0%, transparent 40%),
+                              radial-gradient(circle at 70% 80%, rgba(244, 192, 37, 0.05) 0%, transparent 40%);
+            z-index: 0;
+        }
+        .shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: rotate(45deg);
+            pointer-events: none;
+        }
+        .glow-text {
+            text-shadow: 0 0 10px rgba(244, 192, 37, 0.5);
+        }
+        .card-aura-gold { box-shadow: 0 0 20px rgba(244, 192, 37, 0.3); }
+        .card-aura-blue { box-shadow: 0 0 20px rgba(76, 201, 240, 0.3); }
+        .card-aura-purple { box-shadow: 0 0 20px rgba(114, 9, 183, 0.3); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased overflow-hidden">
+<div class="relative flex h-screen w-full flex-col nebula-bg">
+<!-- Header -->
+<header class="relative z-10 flex items-center justify-between px-6 pt-8 pb-4">
+<button class="flex items-center justify-center size-10 rounded-full bg-primary/10 border border-primary/20">
+<span class="material-symbols-outlined text-primary text-xl">arrow_back_ios_new</span>
+</button>
+<div class="text-center">
+<h1 class="text-xs uppercase tracking-[0.4em] font-light text-primary/80">Aetherium Oracle</h1>
+<p class="text-[10px] uppercase tracking-widest text-slate-500 mt-1">NotebookLM Next</p>
+</div>
+<button class="flex items-center justify-center size-10 rounded-full bg-primary/10 border border-primary/20">
+<span class="material-symbols-outlined text-primary">auto_awesome</span>
+</button>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col items-center justify-center px-6 relative z-10">
+<!-- Central Oracle Card -->
+<div class="relative w-full max-w-[320px] aspect-[2/3.2] glass-card rounded-2xl flex flex-col p-8 items-center justify-between border-2 border-primary/40 card-aura-gold">
+<!-- Card Header -->
+<div class="w-full text-center">
+<span class="text-[10px] tracking-[0.2em] text-primary uppercase font-medium">Arcana IV • Quantum Neural Theory</span>
+</div>
+<!-- Central Sigil -->
+<div class="relative flex items-center justify-center size-32">
+<div class="absolute inset-0 bg-primary/20 rounded-full blur-3xl"></div>
+<div class="relative size-24 flex items-center justify-center border border-primary/30 rounded-full">
+<span class="material-symbols-outlined text-6xl text-primary glow-text">psychology</span>
+</div>
+<!-- Decorative Orbits -->
+<div class="absolute inset-0 border border-primary/10 rounded-full scale-125"></div>
+<div class="absolute inset-0 border border-primary/5 rounded-full scale-150 border-dashed"></div>
+</div>
+<!-- Question Text -->
+<div class="w-full text-center space-y-4">
+<h2 class="text-xl md:text-2xl font-medium leading-tight tracking-tight text-slate-100">
+                        What is the primary function of the crystalline brain sigil in Aetherium synthesis?
+                    </h2>
+<div class="h-[1px] w-12 bg-gradient-to-r from-transparent via-primary/50 to-transparent mx-auto"></div>
+</div>
+<!-- Action Button -->
+<button class="w-full shimmer bg-primary hover:bg-primary/90 text-background-dark font-bold py-4 rounded-xl flex items-center justify-center gap-2 group transition-all duration-300 shadow-[0_0_20px_rgba(244,192,37,0.4)]">
+<span class="text-sm uppercase tracking-widest">Reveal Wisdom</span>
+<span class="material-symbols-outlined text-lg">auto_fix_high</span>
+</button>
+</div>
+<!-- Carousel Preview -->
+<div class="w-full mt-10 overflow-hidden">
+<div class="flex gap-4 px-10 justify-center">
+<!-- Left Card Edge -->
+<div class="w-12 h-64 glass-card rounded-xl opacity-40 -ml-20 border-ethereal-blue/30 card-aura-blue flex items-center justify-center">
+<span class="material-symbols-outlined text-ethereal-blue -rotate-90">database</span>
+</div>
+<!-- Right Card Edge -->
+<div class="w-12 h-64 glass-card rounded-xl opacity-40 -mr-20 border-ethereal-purple/30 card-aura-purple flex items-center justify-center">
+<span class="material-symbols-outlined text-ethereal-purple rotate-90">science</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Minimalist Glass Navigation -->
+<nav class="relative z-10 px-8 pb-10 pt-4">
+<div class="max-w-md mx-auto glass-card rounded-full p-2 flex items-center justify-between border-slate-700/30">
+<a class="flex items-center justify-center size-12 rounded-full text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">library_books</span>
+</a>
+<a class="flex items-center justify-center size-14 rounded-full bg-primary text-background-dark shadow-lg shadow-primary/20" href="#">
+<span class="material-symbols-outlined font-bold text-3xl">flare</span>
+</a>
+<a class="flex items-center justify-center size-12 rounded-full text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+</a>
+</div>
+</nav>
+<!-- Abstract Background Image Elements -->
+<div class="absolute inset-0 pointer-events-none opacity-20">
+<img alt="" class="absolute top-0 left-0 w-full h-full object-cover mix-blend-screen" data-alt="Deep space nebula with swirling dust and gas" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzalyHO1IaY2-vTy_kszmuMgcbWAFhmJpPdLa2eI9KilvSRdnuUs9NQRT43XVzfqFX1WUyB6fZvZiCuaWCRfIqZEx6IW5CkcA7TfXYnBf9wjRUMdzuc5ddFb2OT8cMwzWrj3ptAZkxkv8NJ5QZ7HsYY3C9YQpsy3NKaYg7x3zkCvRo0swWp_Ry5IjLfz7TTpqKptrrm0uYlV4vPWFYoGrmlJNCSVad3T2hHcI4GNZScbhhPfAIpYyVGoVNG0OynWVkLhuE25BFzSo"/>
+</div>
+</div>
+</body></html>

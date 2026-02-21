@@ -1,0 +1,214 @@
+<!-- Aetherium Plus Studio Dashboard -->
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aetherium Plus Studio Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#8c2bee",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191022",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .glass {
+            background: rgba(140, 43, 238, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glow-primary {
+            box-shadow: 0 0 20px rgba(140, 43, 238, 0.4);
+        }
+        .ethereal-bg {
+            background: radial-gradient(circle at 50% 0%, #2d1b4d 0%, #191022 70%);
+        }
+        body {
+            overscroll-behavior-y: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col ethereal-bg">
+<!-- Header -->
+<header class="sticky top-0 z-50 px-6 pt-8 pb-4 flex items-center justify-between glass">
+<div class="flex flex-col">
+<span class="text-[10px] uppercase tracking-[0.2em] text-primary font-bold">Aetherium // Studio</span>
+<h1 class="text-xl font-bold tracking-tight">Plus Dashboard</h1>
+</div>
+<div class="flex gap-3">
+<button class="w-10 h-10 rounded-full glass flex items-center justify-center text-slate-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[20px]">share</span>
+</button>
+<button class="w-10 h-10 rounded-full glass flex items-center justify-center text-slate-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+</button>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto px-6 pb-32">
+<!-- Sources Section -->
+<section class="mt-8">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-lg font-bold tracking-wide">Sources</h2>
+<span class="text-xs text-slate-500 font-medium">0 Added</span>
+</div>
+<div class="glass-card rounded-lg p-8 flex flex-col items-center text-center gap-4 relative overflow-hidden group">
+<div class="absolute -top-24 -left-24 w-48 h-48 bg-primary/10 rounded-full blur-3xl"></div>
+<div class="absolute -bottom-24 -right-24 w-48 h-48 bg-primary/5 rounded-full blur-3xl"></div>
+<button class="w-16 h-16 rounded-full bg-primary flex items-center justify-center glow-primary relative z-10 hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-white text-3xl">add</span>
+</button>
+<div class="space-y-2 relative z-10">
+<p class="text-base font-semibold">Bring your knowledge to life</p>
+<p class="text-xs text-slate-400 leading-relaxed max-w-[200px] mx-auto">
+                        Add PDFs, Web links, Video, or Audio to begin your ethereal synthesis.
+                    </p>
+</div>
+<div class="flex gap-4 mt-2">
+<span class="material-symbols-outlined text-slate-500 text-lg">description</span>
+<span class="material-symbols-outlined text-slate-500 text-lg">link</span>
+<span class="material-symbols-outlined text-slate-500 text-lg">play_circle</span>
+<span class="material-symbols-outlined text-slate-500 text-lg">mic</span>
+</div>
+</div>
+</section>
+<!-- Chat Section -->
+<section class="mt-10">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-lg font-bold tracking-wide">Chat</h2>
+</div>
+<div class="glass-card rounded-full p-1 pl-6 flex items-center justify-between group">
+<span class="text-sm text-slate-500">Ask Aetherium anything...</span>
+<button class="w-10 h-10 rounded-full bg-primary/20 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
+<span class="material-symbols-outlined text-[20px]">send</span>
+</button>
+</div>
+</section>
+<!-- Studio Grid -->
+<section class="mt-10">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-lg font-bold tracking-wide">Studio Tools</h2>
+<button class="text-xs text-primary font-bold uppercase tracking-wider">View All</button>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<!-- Tool Card: Audio Overview -->
+<div class="glass-card rounded-lg p-5 flex flex-col gap-4 aspect-square hover:border-primary/50 transition-colors cursor-pointer group">
+<div class="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">spatial_audio_off</span>
+</div>
+<div>
+<h3 class="font-bold text-sm">Audio Overview</h3>
+<p class="text-[10px] text-slate-500 mt-1 uppercase tracking-widest font-medium">Deep Dive podcast</p>
+</div>
+</div>
+<!-- Tool Card: Mind Map -->
+<div class="glass-card rounded-lg p-5 flex flex-col gap-4 aspect-square hover:border-primary/50 transition-colors cursor-pointer group">
+<div class="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">hub</span>
+</div>
+<div>
+<h3 class="font-bold text-sm">Mind Map</h3>
+<p class="text-[10px] text-slate-500 mt-1 uppercase tracking-widest font-medium">Visual connections</p>
+</div>
+</div>
+<!-- Tool Card: Flashcards -->
+<div class="glass-card rounded-lg p-5 flex flex-col gap-4 aspect-square hover:border-primary/50 transition-colors cursor-pointer group">
+<div class="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">style</span>
+</div>
+<div>
+<h3 class="font-bold text-sm">Flashcards</h3>
+<p class="text-[10px] text-slate-500 mt-1 uppercase tracking-widest font-medium">Active recall</p>
+</div>
+</div>
+<!-- Tool Card: Slide Deck -->
+<div class="glass-card rounded-lg p-5 flex flex-col gap-4 aspect-square hover:border-primary/50 transition-colors cursor-pointer group">
+<div class="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">show_chart</span>
+</div>
+<div>
+<h3 class="font-bold text-sm">Slide Deck</h3>
+<p class="text-[10px] text-slate-500 mt-1 uppercase tracking-widest font-medium">Auto-generation</p>
+</div>
+</div>
+<!-- Tool Card: Quiz -->
+<div class="glass-card rounded-lg p-5 flex flex-col gap-4 aspect-square hover:border-primary/50 transition-colors cursor-pointer group">
+<div class="w-10 h-10 rounded-full bg-rose-500/10 flex items-center justify-center text-rose-400 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">quiz</span>
+</div>
+<div>
+<h3 class="font-bold text-sm">Quiz</h3>
+<p class="text-[10px] text-slate-500 mt-1 uppercase tracking-widest font-medium">Test knowledge</p>
+</div>
+</div>
+<!-- Tool Card: Report -->
+<div class="glass-card rounded-lg p-5 flex flex-col gap-4 aspect-square hover:border-primary/50 transition-colors cursor-pointer group">
+<div class="w-10 h-10 rounded-full bg-cyan-500/10 flex items-center justify-center text-cyan-400 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">article</span>
+</div>
+<div>
+<h3 class="font-bold text-sm">Summary Report</h3>
+<p class="text-[10px] text-slate-500 mt-1 uppercase tracking-widest font-medium">Detailed brief</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Navigation -->
+<nav class="fixed bottom-6 left-6 right-6 z-50">
+<div class="glass flex items-center justify-between p-2 rounded-full border border-white/10 px-4">
+<a class="flex flex-col items-center justify-center w-12 h-12 text-slate-400 transition-all hover:text-primary" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center w-12 h-12 text-slate-400 transition-all hover:text-primary" href="#">
+<span class="material-symbols-outlined">folder</span>
+<span class="text-[10px] font-medium">Sources</span>
+</a>
+<!-- Central Alchemy Button -->
+<a class="w-14 h-14 bg-primary rounded-full flex items-center justify-center text-white glow-primary -mt-8 border-4 border-background-dark shadow-xl hover:scale-110 transition-transform" href="#">
+<span class="material-symbols-outlined text-3xl">auto_fix_high</span>
+</a>
+<a class="flex flex-col items-center justify-center w-12 h-12 text-slate-400 transition-all hover:text-primary" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="text-[10px] font-medium">History</span>
+</a>
+<a class="flex flex-col items-center justify-center w-12 h-12 text-slate-400 transition-all hover:text-primary" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="text-[10px] font-medium">Profile</span>
+</a>
+</div>
+</nav>
+<!-- Decorative elements -->
+<div class="fixed top-0 left-0 w-full h-full pointer-events-none z-[-1] overflow-hidden opacity-30">
+<div class="absolute top-[10%] left-[5%] w-64 h-64 bg-primary/20 rounded-full blur-[100px]"></div>
+<div class="absolute bottom-[20%] right-[5%] w-96 h-96 bg-blue-500/10 rounded-full blur-[120px]"></div>
+</div>
+</body></html>

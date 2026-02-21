@@ -1,0 +1,220 @@
+<!-- Aetherium Video Overview Cinema -->
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aetherium Video Overview Cinema</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#4b2bee",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#050508",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .aether-glow {
+            box-shadow: 0 0 15px rgba(75, 43, 238, 0.5);
+        }
+        .text-glow {
+            text-shadow: 0 0 8px rgba(75, 43, 238, 0.6);
+        }
+        body {
+            background: radial-gradient(circle at top right, #1a1635 0%, #050508 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col overflow-x-hidden">
+<!-- Header -->
+<header class="flex items-center justify-between p-6 pt-12">
+<button class="flex items-center justify-center size-10 rounded-full glass-panel hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-slate-100">arrow_back_ios_new</span>
+</button>
+<div class="text-center">
+<h1 class="text-sm uppercase tracking-[0.2em] text-slate-400 font-medium">Aetherium // Cinema</h1>
+<p class="text-lg font-bold text-slate-100 tracking-tight">Video Overview</p>
+</div>
+<button class="flex items-center justify-center size-10 rounded-full glass-panel hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-slate-100">share</span>
+</button>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 px-4 space-y-8 pb-32">
+<!-- Cinematic Video Player -->
+<section class="relative group">
+<div class="relative aspect-video w-full rounded-xl overflow-hidden glass-panel aether-glow">
+<div class="absolute inset-0 bg-cover bg-center opacity-80" data-alt="Abstract mystical purple and blue nebula background" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBENNvg-mftgq6DpdVbb-PjB_2xUgs4hvE_fNBTf6PL4d4p_urn-uqzrIR9uE7JMWm3N11bN0n9Mj-T5brHECDKvow8JSzfYE58LRj8nuzd9qGjpMMkRwVGOV54VLLov1Zvc_-TtQcnHpYjfzuNSrlWXlfhTHbkJjEkvztv6iQFczyH3qivW1HJLirtGVkdZwlui2gL93EhvFRp0VASPzCSeLJqhUENPl6PJCp5BbyJVlytt4nBCRn6ImuPEet7zMlQg8zgOjy-Tzg');">
+</div>
+<!-- Play Overlay -->
+<div class="absolute inset-0 flex items-center justify-center">
+<button class="size-20 rounded-full bg-primary/20 backdrop-blur-md border border-primary/40 flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-5xl text-white fill-1">play_arrow</span>
+</button>
+</div>
+<!-- Custom Player Controls -->
+<div class="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-medium text-slate-300">02:44</span>
+<span class="text-xs font-medium text-slate-300">05:12</span>
+</div>
+<!-- Aether Progress Bar -->
+<div class="relative h-1.5 w-full bg-white/20 rounded-full overflow-hidden">
+<div class="absolute top-0 left-0 h-full w-[60%] bg-primary aether-glow flex items-center justify-end">
+<div class="size-3 rounded-full bg-white shadow-[0_0_10px_#fff]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Particle decoration -->
+<div class="absolute -top-4 -right-4 size-24 bg-primary/20 blur-3xl rounded-full"></div>
+<div class="absolute -bottom-4 -left-4 size-32 bg-primary/10 blur-3xl rounded-full"></div>
+</section>
+<!-- Cinematic Summary Section -->
+<section class="space-y-4">
+<div class="flex items-center justify-between px-2">
+<h2 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">auto_awesome</span>
+                    Cinematic Summary
+                </h2>
+<span class="text-xs font-medium px-2 py-1 rounded bg-primary/20 text-primary border border-primary/30 uppercase">AI Synced</span>
+</div>
+<div class="glass-panel rounded-xl p-5 space-y-4 max-h-[180px] overflow-y-auto custom-scrollbar">
+<div class="flex gap-4 items-start border-l-2 border-primary/50 pl-4 py-1">
+<div class="flex-1">
+<p class="text-slate-100 font-medium text-sm leading-relaxed">Neural pathway synthesis identified in the core sequence.</p>
+<p class="text-slate-400 text-xs mt-1">Timestamp 01:22</p>
+</div>
+</div>
+<div class="flex gap-4 items-start border-l-2 border-primary/20 pl-4 py-1">
+<div class="flex-1 opacity-60">
+<p class="text-slate-200 font-medium text-sm leading-relaxed">Atmospheric displacement patterns suggest a shift in visual tone.</p>
+<p class="text-slate-400 text-xs mt-1">Timestamp 02:45</p>
+</div>
+</div>
+<div class="flex gap-4 items-start border-l-2 border-primary/10 pl-4 py-1">
+<div class="flex-1 opacity-40">
+<p class="text-slate-300 font-medium text-sm leading-relaxed">Recursive loops detected within the metadata framework.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Key Scenes Carousel -->
+<section class="space-y-4 pb-10">
+<h2 class="text-lg font-bold px-2 text-white">Visual Milestones</h2>
+<div class="flex gap-4 overflow-x-auto pb-4 px-2 no-scrollbar">
+<!-- Crystal Thumbnail 1 -->
+<div class="flex-shrink-0 flex flex-col items-center gap-2 group">
+<div class="size-20 rounded-lg overflow-hidden glass-panel border-primary/40 p-1 group-hover:border-primary transition-colors">
+<div class="w-full h-full rounded-md bg-cover bg-center" data-alt="Abstract crystal formation in dark space" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCtLHqFjUFChV0BMYScxwo-Ih4ZI6tD7VlkvNAc_KluyMH7XIGRMoA7UqrvNLaFVpCT9Yi9p96b7jVWS2j5nz1qAZ_oMR2rXImjg1h1De_w4m5oCtp8l8-KmWau7lvKz7Y_nfkBsU0nwPiMXqpmvS6MxI3fqBlH1vXUTkcciNc56Yry7UwzlyeGlmpF7byKhOQaVaSTyBbQCET17ql0xccAnLTOY6LrqhQeFeAtg3o0uv38jAOGqrCARB7tKQxT95IcnP0MKpyvhg0');">
+</div>
+</div>
+<span class="text-[10px] font-bold text-primary uppercase tracking-widest">Ignition</span>
+</div>
+<!-- Crystal Thumbnail 2 -->
+<div class="flex-shrink-0 flex flex-col items-center gap-2 group">
+<div class="size-20 rounded-lg overflow-hidden glass-panel border-white/10 p-1 group-hover:border-primary transition-colors">
+<div class="w-full h-full rounded-md bg-cover bg-center opacity-60" data-alt="Deep space nebula in high resolution" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDWXl6RyoaW34SwgpVzAXN82o-UpePEzfC2nqFsuNm-YO69xQ5VtpTeKLWr8lGH-M8DYfj7QbET9XsRbnwrOQrqQ0mYfx4PYvBrViygrIPDmt_dnzut_2jRi5X7BamUl3K2OD757sgPQFMwZPmyzhlTfwyyz2zdKVDTQ-O9YFTyS9qAkHNSl3_Gu-aQjWGrwayVvUyI79a_1HZ_wQ5lVh1XEVxSHjcHX38RiUPwz2xeS5io9rNcDrEeuvsiAcX5qCYkJDZ3Ynzv5YE');">
+</div>
+</div>
+<span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Flux</span>
+</div>
+<!-- Crystal Thumbnail 3 -->
+<div class="flex-shrink-0 flex flex-col items-center gap-2 group">
+<div class="size-20 rounded-lg overflow-hidden glass-panel border-white/10 p-1 group-hover:border-primary transition-colors">
+<div class="w-full h-full rounded-md bg-cover bg-center opacity-60" data-alt="Stars and galaxies in a cosmic expanse" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAwjYEjm5OfioJPwVfmHAIhTlTs2kL-A4NtqCGFLpYoWBCqMG1WCr0UaFLJsDycUvpgSs44aFNH42l2NYnMHp0iipmkyW-JFFVbLfnxtuft2TPkRjDF6JByfX0DQuwviFBQcqCxuanyCoYnE181Cpp9rFH78R-yQu8ymkqRU7t1ri-N2HZmfgkH4h-v0KO2VtrgfXo8C6UY-jdb_IPJpsculLyqARhQhLf68l1ETo79v2HoZ1OXOtIvxa0beG9zY9qahr3irmggPH8');">
+</div>
+</div>
+<span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Resonate</span>
+</div>
+<!-- Crystal Thumbnail 4 -->
+<div class="flex-shrink-0 flex flex-col items-center gap-2 group">
+<div class="size-20 rounded-lg overflow-hidden glass-panel border-white/10 p-1 group-hover:border-primary transition-colors">
+<div class="w-full h-full rounded-md bg-cover bg-center opacity-60" data-alt="View of earth from satellite orbit" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCpqCuhNVED_LUSL-RJCqHY67RGenMZTljAYOCLJw8B63SVUaewQCyISNxwzPJI6LFXefZpI4zRJTy_BoaP8w1wTRk8D0d088yAmyFOubgoy7ZeZUJ0T4sD7buaI7ugecAKpwf6V5ieY0MR0Y8M8o-3ubS_nIM0nMHPcTb2VZJeE1lObkHC-B4RE9sRKrVHv_sj_EGpdSeECkgjtkGo7Ah_cDwq8P1hpf0Sf0W9__AuQsLlq0Snq-qneldj5tp4_qWVpLgW-IP_S1E');">
+</div>
+</div>
+<span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Overview</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 inset-x-0 glass-panel rounded-t-xl z-50 px-6 pb-8 pt-4 border-t border-white/10">
+<div class="flex justify-between items-center max-w-md mx-auto">
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">home</span>
+<span class="text-[10px] font-medium uppercase tracking-tighter">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">database</span>
+<span class="text-[10px] font-medium uppercase tracking-tighter">Sources</span>
+</a>
+<a class="relative -top-6" href="#">
+<div class="size-14 rounded-full bg-primary aether-glow flex items-center justify-center border-4 border-background-dark">
+<span class="material-symbols-outlined text-white text-[28px] fill-1">auto_fix_high</span>
+</div>
+<span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-primary uppercase tracking-tighter">Alchemy</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">history</span>
+<span class="text-[10px] font-medium uppercase tracking-tighter">History</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">account_circle</span>
+<span class="text-[10px] font-medium uppercase tracking-tighter">Profile</span>
+</a>
+</div>
+<!-- iOS Home Indicator Safe Area -->
+<div class="mt-4 flex justify-center">
+<div class="w-32 h-1 bg-white/20 rounded-full"></div>
+</div>
+</nav>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(75, 43, 238, 0.3);
+            border-radius: 10px;
+        }
+    </style>
+</body></html>
