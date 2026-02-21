@@ -1,68 +1,30 @@
-# AETHERIUM LM - Production-Grade LLM System
 
-A robust, asynchronous LLM management system featuring a mobile-first configuration console. Built to provide a unified interface for interacting with multiple AI providers (OpenAI, Anthropic, Google, etc.) with production-grade reliability.
+# AETHERIUM UI Architecture
 
-## 🚀 Key Features
+## 1. โครงสร้างหลักของหน้าจอ (Layout)
+ในต้นแบบ AETHERIUM หน้าจอจะถูกแบ่งออกเป็นพื้นที่หลักสองส่วนภายใต้กรอบการทำงานแบบ Glassmorphism [1-4]:
 
-*   **Multi-Provider Support**: Seamlessly switch between OpenAI, Anthropic, Google Gemini, Groq, Ollama, and 20+ other providers via [LiteLLM](https://docs.litellm.ai/).
-*   **Mobile-First Console**: A responsive configuration UI built with [Flet](https://flet.dev/), designed for easy on-the-go management.
-*   **Async Architecture**: Fully asynchronous database operations (SQLAlchemy + aiosqlite) and non-blocking API calls for high performance.
-*   **Robust Configuration**: Centralized validation logic ensures API keys and model parameters are correct before use.
-*   **Extensible Design**: Service-Oriented Architecture (SOA) separates UI concerns from business logic, making it easy to add new features.
+*   **แถบด้านข้าง (Sidebar - วิหารส่วนหน้า):** เป็นส่วนที่ใช้เลือกฟีเจอร์ต่างๆ เช่น Audio Overview, Video Overview, แฟลชการ์ด หรือตารางข้อมูล โดยแต่ละรายการจะมีไอคอนเฉพาะตัว [2, 5-8]
+*   **พื้นที่ทำงานหลัก (Main Content - พื้นที่การแปรธาตุ):** เป็นส่วนที่ใช้สำหรับการตั้งค่าแหล่งข้อมูลและแสดงผลลัพธ์ [3]
 
-## 🛠️ Tech Stack
+## 2. ส่วนกำหนดค่าแหล่งข้อมูล (Source Configuration)
+ส่วนนี้เรียกว่า Source Blueprint ซึ่งมีองค์ประกอบย่อยคือ:
 
-*   **UI Framework**: Flet (Flutter for Python)
-*   **LLM Abstraction**: LiteLLM
-*   **Database**: SQLAlchemy (AsyncIO) with SQLite
-*   **Configuration**: Pydantic Settings
+*   **ช่องใส่รายละเอียดโครงสร้าง (Blueprint):** สำหรับบรรยายความต้องการหลักหรือโครงสร้างที่ต้องการ [9]
+*   **ช่องใส่เนื้อหาต้นฉบับ (Raw Source Content):** สำหรับวางเนื้อหาจากเอกสารที่ต้องการให้นำไปวิเคราะห์ [10]
+*   **ปุ่ม Auto Synergy:** ฟังก์ชันสำหรับประสานพลัง AI เพื่อวิเคราะห์เนื้อหาและสร้างเป้าหมาย (Goals) ของฟีเจอร์ต่างๆ โดยอัตโนมัติ [9, 11, 12]
 
-## 📦 Installation
+## 3. ส่วนกำหนดเป้าหมายและแสดงผลลัพธ์ (Feature Goal & Output)
+เมื่อเลือกฟีเจอร์จากแถบด้านข้างแล้ว พื้นที่ส่วนนี้จะแสดงข้อมูลดังนี้:
 
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/your-username/aetherium-lm.git
-    cd aetherium-lm
-    ```
+*   **ช่องเจตจำนงของผู้ใช้ (Your Intent/Goal):** สำหรับระบุเป้าหมายเฉพาะเจาะจงที่ต้องการให้ผลลัพธ์เน้นเป็นพิเศษ [13, 14]
+*   **พื้นที่แสดงผลลัพธ์ (Aether Output):** ส่วนที่แสดง Steering Prompt หรือคำสั่งที่ AI ถักทอขึ้นมา ซึ่งสามารถคัดลอกไปใช้งานต่อได้ [15, 16]
+*   **ปุ่มสร้างคำสั่ง (Generate Button):** ปุ่มสำหรับสั่งการให้ระบบเริ่มประมวลผล [17]
 
-2.  **Create and activate a virtual environment:**
-    ```bash
-    python -m venv venv
-    source venv/bin/activate  # On Windows: venv\Scripts\activate
-    ```
+## 4. องค์ประกอบเสริมของระบบ
+*   **Status Message Overlay:** แถบแจ้งเตือนสถานะการทำงานที่มุมจอ เช่น "กำลังส่งกระแสจิต" หรือ "ประสานพลังสำเร็จ" [7]
+*   **Aether Active Icon:** ไอคอนที่แสดงเอฟเฟกต์การเต้น (Pulse) เพื่อบอกว่าระบบกำลังทำงานอยู่ [18]
 
-3.  **Install dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
+## Comparison with NotebookLM
 
-## 🎮 Usage
-
-Run the mobile configuration console:
-
-```bash
-python main.py
-```
-
-The app will launch in a new window (or your browser), allowing you to:
-1.  Select an AI Provider.
-2.  Enter your Model Name (e.g., `gpt-4o`, `claude-3-opus`).
-3.  Input your API Key.
-4.  Click **"Validate & Save Config"** to test the connection in real-time.
-
-## 📂 Documentation & Architecture
-
-For a deep dive into the system's design, please refer to the generated architecture reports in the `docs/` folder:
-
-*   **[Project Structure Report](docs/architecture_reports/project_structure_report.txt)**: A detailed breakdown of every file in the codebase and its purpose.
-*   **[Data Flow Simulation](docs/architecture_reports/data_flow_simulation.md)**: Visual diagrams (Mermaid) illustrating how data moves from the UI to the backend and external APIs.
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1.  Fork the project
-2.  Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3.  Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4.  Push to the branch (`git push origin feature/AmazingFeature`)
-5.  Open a Pull Request
+สำหรับ NotebookLM เวอร์ชันมาตรฐาน โครงสร้าง UI จะเรียบง่ายกว่าโดยแบ่งเป็น 3 แถวหลักคือ แหล่งข้อมูล (Sources) ทางด้านซ้าย, แชท (Chat) ตรงกลาง และ สตูดิโอ (Studio) ทางด้านขวาซึ่งเป็นที่รวมของฟีเจอร์การสร้างเนื้อหาต่างๆ [19-21]

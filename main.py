@@ -32,18 +32,9 @@ class ChatMessage(ft.Row):
 
     def get_avatar_color(self, user_name: str):
         colors_lookup = [
-            ft.colors.AMBER,
-            ft.colors.BLUE,
-            ft.colors.BROWN,
-            ft.colors.CYAN,
-            ft.colors.GREEN,
-            ft.colors.INDIGO,
-            ft.colors.LIME,
-            ft.colors.ORANGE,
-            ft.colors.PINK,
-            ft.colors.PURPLE,
-            ft.colors.RED,
-            ft.colors.TEAL,
+            ft.colors.AMBER, ft.colors.BLUE, ft.colors.BROWN, ft.colors.CYAN,
+            ft.colors.GREEN, ft.colors.INDIGO, ft.colors.LIME, ft.colors.ORANGE,
+            ft.colors.PINK, ft.colors.PURPLE, ft.colors.RED, ft.colors.TEAL,
             ft.colors.YELLOW,
         ]
         return colors_lookup[hash(user_name) % len(colors_lookup)]
@@ -60,12 +51,29 @@ async def main(page: ft.Page):
     page.vertical_alignment = "start"
     page.padding = 20
 
+    # --- File Picker Logic ---
+    async def handle_file_picker_result(e: ft.FilePickerResultEvent):
+        if not e.files:
+            return
+
+        file_name = e.files[0].name
+        chat_view.controls.append(ChatMessage(f"File attached: {file_name}", "You", "user"))
+        await page.update_async()
+
+        bot_response_placeholder = ChatMessage("...", "Aetherium Bot", "bot")
+        chat_view.controls.append(bot_response_placeholder)
+        await page.update_async()
+
+        await asyncio.sleep(1.5)
+        bot_response_placeholder.controls[1].controls[1].value = f"I have received your file: \"{file_name}\"."
+        await page.update_async()
+
+    file_picker = ft.FilePicker(on_result=handle_file_picker_result)
+    page.overlay.append(file_picker)
+
     # --- Chat UI Components ---
     chat_view = ft.ListView(
-        expand=True,
-        spacing=15,
-        auto_scroll=True,
-        divider_thickness=0,
+        expand=True, spacing=15, auto_scroll=True, divider_thickness=0,
     )
 
     new_message_field = ft.TextField(
@@ -83,17 +91,14 @@ async def main(page: ft.Page):
         if not user_message:
             return
 
-        # Add user message to chat
         chat_view.controls.append(ChatMessage(user_message, "You", "user"))
         new_message_field.value = ""
         await page.update_async()
 
-        # Simulate bot response
         bot_response_placeholder = ChatMessage("...", "Aetherium Bot", "bot")
         chat_view.controls.append(bot_response_placeholder)
         await page.update_async()
 
-        # Simulate thinking time and then update the message
         await asyncio.sleep(1.5)
         bot_response_placeholder.controls[1].controls[1].value = f"This is a simulated response to: \"{user_message}\""
         await page.update_async()
@@ -110,6 +115,12 @@ async def main(page: ft.Page):
         ft.Row(
             controls=[
                 new_message_field,
+                ft.IconButton(
+                    icon=ft.icons.ATTACH_FILE_ROUNDED,
+                    tooltip="Attach a file",
+                    on_click=lambda _: file_picker.pick_files(allow_multiple=False),
+                    icon_color=ft.colors.CYAN_ACCENT,
+                ),
                 ft.IconButton(
                     icon=ft.icons.SEND_ROUNDED,
                     tooltip="Send message",
