@@ -23,7 +23,7 @@ class Message:
 class ThoughtNode:
     id: str = field(default_factory=lambda: str(uuid.uuid4()))
     text: str = ""
-    language: str = "en"  # "en" for logical pivot, "th" for context
+    language: str = "th"  # "en" for logical pivot, "th" for context
     is_hidden: bool = True
     parent_id: Optional[str] = None
     children: List['ThoughtNode'] = field(default_factory=list)

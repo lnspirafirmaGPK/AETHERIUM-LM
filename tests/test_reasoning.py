@@ -1,8 +1,21 @@
 import asyncio
 import unittest
-from cogitator_x.core.models import ReasoningState
+from cogitator_x.core.models import ReasoningState, ThoughtNode
 from cogitator_x.reasoning.mcts import MCTSReasoningEngine
 from cogitator_x.reasoning.prm import ProcessRewardModel
+
+class TestModels(unittest.TestCase):
+    def test_thought_node_creation(self):
+        node = ThoughtNode(text="Test thought")
+        self.assertEqual(node.text, "Test thought")
+        self.assertEqual(node.language, "th")
+        self.assertEqual(node.visit_count, 0)
+
+    def test_reasoning_state_creation(self):
+        state = ReasoningState(query="Test Query")
+        self.assertEqual(state.query, "Test Query")
+        self.assertIsNone(state.thought_root)
+        self.assertFalse(state.is_complete)
 
 class TestMCTS(unittest.IsolatedAsyncioTestCase):
     async def test_mcts_flow(self):
