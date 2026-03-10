@@ -2,7 +2,7 @@ import enum
 from typing import Any, Dict, Optional
 
 from sqlalchemy import Integer, String, JSON, Enum as SAEnum, ForeignKey
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 
 from app.config import config
@@ -68,6 +68,47 @@ class LLMConfig(Base):
     api_base: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     custom_provider: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     litellm_params: Mapped[Optional[Dict[str, Any]]] = mapped_column(JSON, nullable=True)
+
+
+class PlatformInitiative(Base):
+    __tablename__ = "platform_initiatives"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    name: Mapped[str] = mapped_column(String, index=True)
+    scope: Mapped[str] = mapped_column(String)
+    drivers: Mapped[Optional[Dict[str, Any]]] = mapped_column(JSON, nullable=True)
+    current_state: Mapped[str] = mapped_column(String)
+    target_state: Mapped[str] = mapped_column(String)
+    constraints: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    dependencies: Mapped[Optional[Dict[str, Any]]] = mapped_column(JSON, nullable=True)
+
+
+class PlatformEpic(Base):
+    __tablename__ = "platform_epics"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    initiative_id: Mapped[int] = mapped_column(Integer, ForeignKey("platform_initiatives.id"), index=True)
+    title: Mapped[str] = mapped_column(String)
+    acceptance_criteria: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+
+
+class PlatformStory(Base):
+    __tablename__ = "platform_stories"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    epic_id: Mapped[int] = mapped_column(Integer, ForeignKey("platform_epics.id"), index=True)
+    title: Mapped[str] = mapped_column(String)
+    acceptance_criteria: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+
+
+class PlatformTask(Base):
+    __tablename__ = "platform_tasks"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    story_id: Mapped[int] = mapped_column(Integer, ForeignKey("platform_stories.id"), index=True)
+    title: Mapped[str] = mapped_column(String)
+    owner: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    acceptance_criteria: Mapped[str] = mapped_column(String)
 
 async def init_db():
     async with engine.begin() as conn:
