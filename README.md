@@ -42,3 +42,16 @@ Previously missing capability has now been implemented:
 
 - `GLOBAL_LLM_CONFIGS` in `app/config.py` are system defaults and use negative IDs to distinguish from DB records.
 - Demo UI flow remains available in `main.py` (Flet).
+
+
+## Mobile backend module
+
+A production-oriented mobile backend reference implementation is included in `app/mobile_backend.py` with:
+
+- JWT-based auth and device registration for iOS/Android push routing.
+- Offline-friendly sync (`cursor`, `etag`, `version`) and optimistic conflict handling.
+- Idempotent writes for duplicate/retry-safe commands.
+- Baseline retry/timeout and user-level rate-limit enforcement.
+- Push deduplication across APNs/FCM notification fanout.
+
+See `docs/mobile_backend_api.md` for API contract and policies, and `scripts/simulate_duplicate_retry.py` for duplicate retry simulation.
